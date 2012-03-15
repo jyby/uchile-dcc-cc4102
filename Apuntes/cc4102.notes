@@ -8,59 +8,6 @@
 #+TITLE: CC4102/CC40A/CC53A - Diseno y Analisis de Algoritmos
 #+AUTHOR: Jeremy Barbay
 
-* Examples
-** Example of Mathematical formulas seen with C-c C-x C-l 
-*** Basic formulas
-    $$\log_2 n$$
-    $$\frac{n}{\lg n}$$
-**** NEXT Find a command to put in latex header to make latex math larger
-*** Formulas in array (note the misalignments :( )
-    | $n$                   | $n^2$    | $\lfloor n/2 \rfloor$ |
-    | $\lfloor n/2 \rfloor$ | $n\lg n$ | $n$                   |
-** Example of time planification
-   :PROPERTIES:
-   :COLUMNS:  %80ITEM(TASK)  %5Effort(TIME){:} %5CLOCKSUM
-   :Effort_ALL: 30 45 60 90 2*90 3*90 4*90
-   :END:
-   Use C-c C-x C-c to switch to column mode, and "q" while in a column to quit.
-*** A unit
-**** a topic for 1/2 talk (45mn)
-     :PROPERTIES:
-     :Effort:   45
-     :END:
-**** a topic of 3 talks
-     :PROPERTIES:
-     :Effort:   3*90
-     :END: 
-
-** Example of Structure of Concept Question subsection 				 
-**** PREGUNTAS [0/0]						 :PREGUNTAS:
-***** 
-      :SOLUTION:     
-      :END:
-      :PROOF: 
-      :END:
-      :CONTEXT:
-      :END:
-      
-      1. [ ] 
-      2. [ ] 
-      3. [ ] 
-      4. [ ] 
-      5. [ ] otra respuesta
-***** Title of the question
-      :SOLUTION:     
-      :END:
-      :PROOF: 
-      :END:
-      Text of the question
-      1. [ ] Answer 1
-      2. [ ] Answer 2
-      3. [ ] Answer 3
-      4. [ ] Answer 4
-      5. [ ] none of the above
-
-
 * Lecture Notes CC4102
   :CLOCK:
   CLOCK: [2011-03-08 Tue 11:18]--[2011-03-08 Tue 12:23] =>  1:05
@@ -281,11 +228,11 @@
        - State "TODO"       from ""           [2011-03-10 Thu 11:55]
        :END:
 
-| $f(n)$            | $g(n)$          | $f(n)\in O(g(n)$ | $f(n)\in \Omega(g(n)$ | $f(n)\in Theta(g(n)$ |
+| $f(n)$            | $g(n)$          | $f(n)\in O(g(n)$ | $f(n)\in \Omega(g(n)$ | $f(n)\in\Theta(g(n)$  |
 |-------------------+-----------------+------------------+-----------------------+----------------------|
 | $3n+6$            | $100n-50$       |                  |                       |                      |
 | $n^{\frac{1}{2}}$ | $n^\frac{2}{3}$ |                  |                       |                      |
-
+      
 ***** TODO Cantidad de arboles binarios distintos con 3 nodos internos.
       :LOGBOOK:
       - State "TODO"       from ""           [2011-03-10 Thu 11:55]
@@ -382,7 +329,7 @@ Se tiene que:
 
 ** Conceptos básicos y complejidad 
    :PROPERTIES:
-   :Talks:     6
+   :Talks:    5
    :mns:      540
    :END:
 *** Introduccion Unidad 1
@@ -423,13 +370,36 @@ Se tiene que:
      - Cota superior
      - Cota inferior
 **** Variantes de la Torre de Hanoi				       :TALK:
-    - pesos distintos?
-    - Disk Pile Problema ($n$ discos pero $h<n$ tamaños)
-      - Cota inferior en función de $n$, en función de $n,h$ 
-      - Cota superior en función de $n$, en función de $n,h$
-    - Precise Disk Pile Problema ($n$ discos con $n_i$ de tamaño $i$, $\forall i\in[1..h]$)
-      - cota inferior en función de $n$, en función de $h,n_1,...,n_h$ 
-      - cota superior en función de $n$, en función de $h,n_1,...,n_h$
+
+        |               | Torre de Hanoi       | Platos Sucios                 | Platos Sucios               |
+        |               | con $n$ discos       | con $n$ platos de $s$ tamaños | con $n_i$ platos            |
+        |               |                      |                               | de tamaño $i$, $i\in[1..s]$ |
+        |---------------+----------------------+-------------------------------+-----------------------------|
+        | Cota Superior | $1+2+4+..=2^{n+1}-1$ | Menos que $2^{n+1}-1$?        | Alumnos                     |
+        |---------------+----------------------+-------------------------------+-----------------------------|
+        | Cota Inferior | $1+2+4+..=2^{n+1}-1$ | Mas que $2^{s+1}-1$?          | Alumnos                     |
+        |---------------+----------------------+-------------------------------+-----------------------------|
+        | Complejidad   | $2^{n+1}-1$          | $\Theta((n-s-1)2^{s-1})$      | $\sum_{i=1}^s n_i 2^{s-i}$  |
+        |---------------+----------------------+-------------------------------+-----------------------------|
+      + Torre de Hanoi
+	- cf Años previos, Wikipedia, etc...
+      + Platos Sucios
+	+ Cota Superior
+	  - Mueve todos platos de mismo tamaño en tiempo lineal
+	  - por el resto, como por torre de hanoi
+	+ Cota Inferior *en el peor caso con $n_i$ platos de tamaño $i$, $i\in[1..s]$ 
+	  - todas las instancias con $n_i$ platos de tamaño $i$, $i\in[1..s]$ son de misma dificultad.
+	  - similar a la torre de hanoi sobre $s$ discos.
+	  - $\sum_{i=1}^s n_i 2^{s-i}$
+	+ Cota Inferior *en el peor caso con $n$ platos y $s$  tamaños
+	  - el peor caso es cuando hay $n_1=n-s+1$ dicos pequeños.
+	  - la formula general da
+	    - $(n-s+1)2^{s-1}$ para los $n_1$ discos de tamaño $1$, y
+	    - $\sum_{i=2}^s 2^{s-i} = 2^0+\ldots+2^{s-2} = 2^{s-1}-1$ para los otros discos
+	    - que suma a $(n-s)2^{s-1}+2^s-1$
+	    - (uno puede verificar que vale $2^n-1$ por $s=n$) 
+
+
 **** PREGUNTAS [7/7] 						 :PREGUNTAS:
 ***** DONE [#A] Asintóticas						 :CP:
        :LOGBOOK:
@@ -533,9 +503,634 @@ Se tiene que:
       3. [ ] $2^h$
       4. [ ] $2^h-1$
       5. [ ] otra respuesta
+*** Cotas Inferiores
+    :PROPERTIES:
+    :Effort:   2*90
+    :Talks:    2
+    :END:
+    adversario, teoria de la informacion, reduccion
+**** PREREQUISITOS
+     - de las apuntes de CC3001:
+       - Ordenacion / Cotas inferiores http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/Ordenacion/#1
+       - Ordenacion / Merge sort http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/Ordenacion/#5
+     - de las apuntes de CC4102:
+       - min max
+**** Minimo Maximo de un  arreglo
+***** PREREQUISITOS
+****** Cotas Inferiores en apuntes de CC3001			    :READING:
+    - http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/Ordenacion/#1
+***** Minimo (resp. maximo) de un arreglo
+    - Cota superior
+    - Cota inferior
+***** Calcular el Minimo y el Maximo de un Arreglo en una sola computacion
+    - Cota superior?
+      - cota superior para max + cota superior para min
+    - cota inferior?
+      - cota inferior para min + cota superior para max?
+      - min(cota inferior para min , cota superior para max?)
+
+***** Cota superior para el problema de minmax
+
+      * Calcular el minimo con el algoritmo previo, y el maximo
+       	con un algoritmo simetrico, da una complejidad de $2n-2$
+       	comparaciones, que es demasiado.
+      * El algoritmo siguente calcula el max y el min en
+       	$\frac{3n}{2}-2$ comparaciones:
+       1. Dividir $A$ en $\lfloor n/2 \rfloor$ pares (y
+	  eventualemente un elemento mas, $x$).
+       2. Comparar los dos elementos de cada par.
+       3. Ponga los elementos superiores en el grupo $S$, y los
+	  elementos inferiores en el grupo $I$.
+       4. Calcula el minima $m$ del grupo $I$ con el algorimo de la
+	  pregunta previa, que performa $\lfloor n/2 \rfloor-1$ comparaciones
+       5. Calcula el maxima $M$ del grupo $I$ con un algoritmo
+	  simetrico, con la misma complejidad.
+       6. Si $n$ es par,
+       	 + $m$ y $M$ son respectivamente el minimo y el maximo de $A$.
+       7. Sino, si $x<m$, 
+	  + $x$ y $M$ son respectivamente el minimo y el maximo de $A$.
+       8. Sino, si $x>M$, 
+	  + $m$ y $x$ son respectivamente el minimo y el maximo de $A$.
+       9. Sino
+	  + $m$ y $M$ son respectivamente el minimo y el maximo de $A$.
+      * La complejidad total del algoritmo es
+       -  $n/2+2(n/2-1)=3n/2-2\in 3n/2 + O(1)$ si $n$ es par
+       -  $(n-1)/2 + 2(n-1)/2 +2 = 3n/2 + 1/2\in 3n/2 + O(1)$ si
+	  $n$ es impar.
+       -  en la clase $3n/2 + O(1)$ en ambos casos.
+
+***** Cota inferior para el problema de minmax
+      * Sean las variables siguentes:
+       	- $O$ los $o$ elementos todavia no comparados;
+       	- $G$ los $g$ elementos que ``ganaron'' todas sus comparaciones hasta ahora;
+       	- $P$ los $p$ elementos que ``perdieron'' todas sus comparaciones hasta ahora;
+       	- $E$ las $e$ valores eliminadas (que perdieron al menos una comparacion, y ganaron al menos una comparacion);
+      -  $(o,g,p,e)$ describe el estado de cualquier algoritmo:
+       	-  siempre $o+g+p+e=n$;
+       	-  al inicio, $g=p=e=0$ y $o=n$;
+       	-  al final, $o=0$, $g=p=1$, y $e=n-2$.
+      -  Despues una comparacion $a?b$ en cualquier algoritmo del
+       	 modelo de comparacion, $(o,g,p,e)$ cambia en funcion del
+       	 resultado de la comparacion de la manera siguente:
+       	 $$
+       	 \begin{array}{c|c|c|c|c}
+       	 & a\in O        & a\in G               & a\in P               & a\in E      \\ 
+       	 \hline %--------------------------------------
+       	 b\in O & o-2,g+1,p+1,e & o-1,p,e+1            & o-1,g,p,e+1          & o-1,g+1,p,e \\
+       	 &               & o-1,g,p+1,e          & o-1,g+1,p,e          & o-1,g,p+1,e \\
+       	 \hline %--------------------------------------
+       	 b\in G &               & o,g-1,p,e+1          & o,g,p,e              & o,g,p,e     \\ 
+       	 &               &                      & o,g-1,p-1,e+2        & o,g-1,p,e+1 \\ 
+       	 \hline %--------------------------------------
+       	 b\in P &               &                      & o,g,p-1,e+1          & o,g,p,e     \\ 
+       	 &               &                      &                      & o,g,p-1,e+1 \\ 
+       	 \hline %--------------------------------------
+       	 b\in E &               &                      &                      & o,g,p,e
+       	 \end{array}
+       	 $$
+      -  En algunas configuraciones, el cambio del vector estado depende del resultado de la comparacion: un adversario puede
+       	 maximizar la complejidad del algoritmo eligando el resultado de cada comparacion. El arreglo siguente contiene en graso las
+       	 opciones que maximizan la complejidad del algoritmo:
+       	 $$
+       	 \begin{array}{c|c|c|c|c}
+       	 & a\in O        & a\in G               & a\in P               & a\in E           \\ 
+       	 \hline %--------------------------------------
+       	 b\in O & o-2,g+1,p+1,e & o-1,p,e+1            & o-1,g,p,e+1          & o-1,g+1,p,e      \\
+       	 &               & \mathbf{o-1,g,p+1,e} & \mathbf{o-1,g+1,p,e} & o-1,g,p+1,e      \\
+       	 \hline %--------------------------------------
+       	 b\in G &               & o,g-1,p,e+1          & \mathbf{o,g,p,e}     & \mathbf{o,g,p,e} \\ 
+       	 &               &                      & o,g-1,p-1,e+2        & o,g-1,p,e+1      \\ 
+       	 \hline %--------------------------------------
+       	 b\in P &               &                      & o,g,p-1,e+1          & \mathbf{o,g,p,e} \\ 
+       	 &               &                      &                      & o,g,p-1,e+1      \\ 
+       	 \hline %--------------------------------------
+       	 b\in E &               &                      &                      & o,g,p,e
+       	 \end{array}
+       	 $$
+      -  Con estas opciones, hay
+       	-  $\lceil n/2\rceil$ transiciones de $O$ a $G\cup P$, y
+       	-  $n-2$ transiciones de $G\cup P$ a $E$.
+      -  Eso resulta en una complejidad en el peor caso de $\lceil
+       	 3n/2 \rceil-2 \in 3n/2 +O(1)$ comparaciones.
+**** Busqueda Ordenada (en el modelo de comparaciones)
+       	1. Cota superior: $2\lg n$ vs $1+\lg n$
+       	2. Cota inferior en el peor caso: Strategia de Adversario
+	   cota inferior en el peor caso de  $1+\lg n$
+       	3. Cota inferior en el caso promedio uniforme
+	   - Teoria de la Informacion
+	   - = Arbol de Decision
+	   - cota inferior de $\lg(2n+1)$, i.e. de $1+\lceil\lg(n+1/2)\rceil$
+       	4. La complejidad del problema
+	   - en el peor caso es $\Theta(\lg n)$
+	   - en el caso promedio es $\Theta(\lg n)$
+       	5. Pregunta: en este problema las cotas inferiores en el peor
+	   caso y en el mejor caso son del mismo orden. Siempre es verdad?
+**** Busqueda desordenada
+       1. Complejidad en el peor caso es $\Theta(n)$
+       2. Complejidad en el caso promedio?
+	  - cota superior
+	    - Move To Front
+	    - ?BONUS? Transpose
+	  - cota inferior
+	    - algoritmo offline, lemma del ave
+	  - A VER EN CASA O TUTORIAL: Huffman?
+**** Ordenamiento (en el modelo de comparaciones)
+      - cota superior $O(n\lg n)$
+      - cota inferior en el peor caso
+	- cual tecnica?
+	  - lema del ave?
+	  - Strategia de Adversario?
+	  - Arbol Binario de Decision
+	- Resultado:
+	  - $\Omega(n \lg n)$
+      - cota inferior en el caso promedio
+	- $\Omega(n \lg n)$
+**** Lista de tecnicas para mostrar cotas inferiores
+    1. lema del ave
+    2. Strategia de Adversario
+    3. Arbol Binario de Decision
+    4. Lemma del Minimax (para complejidad en promedio y complejidad
+       de algoritmos aleatroizados)
+**** BONUS: complejidad en promedio y aleatorizada
+     - La relacion entre 
+       - complejidad en promedio de un algoritmo deterministico
+       - complejidad en el peor caso de un algoritmo aleatorizado
+         (promedio sobre su aleatoria)
+
+
+**** PREGUNTAS [0/4]						 :PREGUNTAS:
+***** Cota superior de (la complejidad de) Max ord
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-15 Tue 12:20]
+      :END:
+      Dado un arreglo ordenado de $n$ enteros, en cuanto accessos al
+      arreglo pueden  calcular su valor maximal?
+      1. [ ] $0$
+      2. [ ] $1$
+      3. [ ] $n-1$
+      4. [ ] $n$
+      5. [ ] otra
+***** Definicion de la mediana
+      Dado un arreglo de $n$ enteros, cual es la definicion correcta
+      de la mediana?
+      1. [ ] El promedio de las valores minima y maxima del arreglo.
+      2. [ ] La valor en el centro del arreglo.
+      3. [ ] La valor en el centro del arreglo ordenado.
+      4. [ ] La valor superior a $\lceil(n-1)/2\rceil$ valores y inferior a $\lfloor(n-1)/2\rfloor$ valores. 
+      5. [ ] otra respuesta.
+***** Dificultad de problemas en arreglos
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
+      :END:
+      Dado un arreglo de $n$ enteros, cual problema requiere mas
+      accessos al arreglo? Mas computacion?
+      1. [ ] Calcular la valor minima
+      2. [ ] Calcular la valor maxima
+      3. [ ] Calcular la valor mediana
+      4. [ ] Calcular la valor promedia
+      5. [ ] Son todos iguales
+***** [#A] Cota Inferior para Max
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
+      - State "NEXT"       from ""           [2011-03-15 Tue 11:08]
+      :END:
+      Dado un arreglo de $n$ enteros, cuanto comparaciones entre los
+      elementos del arreglo se necessitan para calcular su valor
+      maximal?
+      1. [ ] $0$
+      2. [ ] $1$
+      3. [ ] $n-1$
+      4. [ ] $n$
+      5. [ ] otra respuesta
+***** Definicion del problema de MinMax
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
+      :END:
+      Dado un arreglo $A$ de $n$ enteros, cual es la definicion del
+      problema de "minmax"?
+      1. [ ] calcular $\min_{i\in[1..n],j\in[i..n]} A[i]$
+      2. [ ] calcular $\min_{i\in[1..n]} \max{j\in[i..n]} A[i]$
+      3. [ ] calcular $(\min_{i\in[1..n]} A[i], \max_{i\in[1..n]} A[i])$
+      4. [ ] calcular $(\min_{i\in[1..n]} A[i], \max_{j\in[1..n]} A[j])$
+      5. [ ] otra respuesta
+      
+***** Cotas de (la complejidad de) problemas combinados
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
+      :END:
+      Dado dos problemas $A$ y $B$ (e.g. min y max), cada uno con un
+      algoritmo que le resuelve optimalemente con complejidad $f_A(n)$
+      y $f_B(n)$, cual es la complejidad del problema $AB$ (e.g. min
+      max)?
+      1. [ ] $\min\{f_A(n)$ , f_B(n)\}$
+      2. [ ] $f_A(n)$ + f_B(n)$
+      3. [ ] $(f_A(n)$ + f_B(n))/2$
+      4. [ ] $\max\{f_A(n)$ , f_B(n)\}$
+      5. [ ] otra respuesta
+***** Cota *superior* de (la complejidad de) Min Max
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
+      :END:
+   :SOLUTION:     
+   $3n/2-2$ si $n$ es par, $3n/2 + 1/2$ si $n$ es impar.
+   :END:
+   :PROOF: 
+   cf apuntes
+   :END:
+      Dado un arreglo de $n$ enteros, en cuanto comparaciones
+      (cantidad exacta, no asimptotica) entre los elementos del
+      arreglo pueden calcular su valor maximal y minimal?
+      1. [ ] $n-1$
+      2. [ ] $3n/2-2$ si $n$ es par, $3n/2 + 1/2$ si $n$ es impar.
+      3. [ ] $(n-1)+(n-2)$
+      4. [ ] $2(n-1)$
+      5. [ ] otra respuesta
+***** Cota *inferior* de (la complejidad de) Min Max
+   :SOLUTION:     
+   $\lceil 3n/2 \rceil-2$
+   :END:
+   :PROOF: 
+   cf apuntes
+   :END:
+      Dado un arreglo de $n$ enteros, cuanto comparaciones (cantidad
+      exacta, no asimptotica) entre los elementos del arreglo se
+      necessitan para calcular su valor maximal y minimal?
+      1. [ ] $n-1$
+      2. [ ] $\lceil 3n/2 \rceil-2$
+      3. [ ] $(n-1)+(n-2)$
+      4. [ ] $2(n-1)$
+      5. [ ] otra respuesta
+***** Juego de las preguntas, $n=4$
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
+      - State "NEXT"       from "CANC"       [2011-03-16 Wed 17:55]
+      - State "CANC"       from "NEXT"       [2011-03-16 Wed 17:49]
+      :END:
+      :SOLUTION:
+      $2$
+      :END:
+      :PROOF:
+      - $x<3$?
+	- $x<2$
+	  - 1
+	  - 2
+	- $x<4
+	  - 3
+	  - 4
+      :END:
+      Cuanta preguntas (e.g. "$x<4$?", "x=2"?)  se necesitan para
+      adivinar un entero entre $1$ y $4 (i.e. $x\in[1..4]$)?
+      1. [ ] 1
+      2. [ ] 2
+      3. [ ] 3
+      4. [ ] 4
+      5. [ ] otra
+***** Juego de las preguntas, $n=1024$
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
+      :END:
+      :SOLUTION:
+      $\log 1024=10$
+      :END:
+      :PROOF:
+      - Cada pregunta permite de reducir el tamano del domanio por dos.
+      - $1024=2^10$ es divido 10 veses por $10$ antes de ser reducido a $1$
+      - como sabemos que $x$ es un entero (en el rango), es suficiente
+      :END:
+      Cuanta preguntas (e.g. "$x<10$?", "x=10"?)  se necesitan para
+      adivinar un entero entre $1$ y $1024$?
+      1. [ ] 8
+      2. [ ] 9
+      3. [ ] 10
+      4. [ ] 11
+      5. [ ] otra
+
+***** Codificacion de un simbolo
+      :SOLUTION:
+      Dado 1 simbolo elegido a dentro de $[1..\sigma]$
+      1. [ ] no se puede codificar *nunca* en $o(\lg\sigma)$ bits
+      2. [X] no se puede codificar *siempre* en $o(\lg\sigma)$ bits
+      3. [X] no se sabe *como codificar siempre* en $o(\lg\sigma)$ bits
+      4. [ ] no se sabe *si nunca se puede codificar* en $o(\lg\sigma)$ bits
+      5. [ ] otra
+      :END:
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
+      :END:
+      Dado 1 simbolo elegido a dentro de $[1..\sigma]$
+      1. [ ] no se puede codificar *nunca* en $o(\lg\sigma)$ bits
+      2. [ ] no se puede codificar *siempre* en $o(\lg\sigma)$ bits
+      3. [ ] no se sabe *como codificar siempre* en $o(\lg\sigma)$ bits
+      4. [ ] no se sabe *si nunca se puede codificar* en $o(\lg\sigma)$ bits
+      5. [ ] otra
+
+***** Definicion de un arbol de decision
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
+      - State "NEXT"       from ""           [2011-03-17 Thu 11:55]
+      :END:
+      :SOLUTION:
+      Un arbol de decision es definido como un arbol
+      1. [ ] modelisando algoritmos en el modelo de
+             comparacion.
+      2. [ ] binario donde cada hoja identifica una instancia.
+      3. [ ] binario donde cada nodo prueba una caracteristica de la
+             instancia.
+      4. [X] un arbol de grado finito donde cada hoja indica una
+             decision sobre la instancia.
+      5. [ ] otra.
+      :END:
+      :PROOF:
+      :END:
+      Un arbol de decision es definido como un arbol
+      1. [ ] modelisando algoritmos en el modelo de
+             comparacion.
+      2. [ ] binario donde cada hoja identifica una instancia.
+      3. [ ] binario donde cada nodo prueba una caracteristica de la
+             instancia.
+      4. [ ] un arbol de grado finito donde cada hoja indica una
+             decision sobre la instancia.
+      5. [ ] otra.
+
+
+***** Codificacion de $n$ simbolos
+      :SOLUTION:
+      Dado $n$ simbolos elegido a dentro de un alfabeto de tamaño  $\sigma$
+      1. [ ] no se puede codificar *nunca* en $o(n\lg\sigma)$ bits
+      2. [X] no se puede codificar *siempre* en $o(n\lg\sigma)$ bits
+      3. [X] no se sabe *como codificar siempre* en $o(n\lg\sigma)$ bits
+      4. [ ] no se sabe *si nunca se puede codificar* en $o(n\lg\sigma)$ bits
+      5. [ ] otra
+      :END:
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
+      :END:
+      Dado $n$ simbolos elegido a dentro de un alfabeto de tamaño  $\sigma$
+      1. [ ] no se puede codificar *nunca* en $o(n\lg\sigma)$ bits
+      2. [ ] no se puede codificar *siempre* en $o(n\lg\sigma)$ bits
+      3. [ ] no se sabe *como codificar siempre* en $o(n\lg\sigma)$ bits
+      4. [ ] no se sabe *si nunca se puede codificar* en $o(n\lg\sigma)$ bits
+      5. [ ] otra
+***** Definicion de "InsertionRank"
+      :SOLUTION:
+      1. [ ] la posicion en cual $x$ deberia ser insertado por dejar
+             $A$ ordenado
+      2. [X] el entero $p\in[1..n+1]$ tal que $A[p-1]<x \leq A[p]$
+      3. [ ] el entero $p\in[0..n]$ tal que $A[p]\leq x < A[p+1]$
+      4. [ ] el entero $p\in[1..n]$ tal que $x = A[p]$
+      5. [ ] ningunos o mas que dos 
+      :END:
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
+      :END:
+      Dado un arreglo ordenado $A[1..n]$ de $n$ valores y una valor
+      $x$, cual(es) de estas definiciones del /Posicion de Insercion/
+      ("Insertion Rank") de $x$ en $A$ son incorectas?
+      ($A[0]=-\infty$ y $A[n+1]=+\infty$)
+      1. [ ] la posicion en cual $x$ deberia ser insertado por dejar
+             $A$ ordenado
+      2. [ ] el entero $p\in[1..n+1]$ tal que $A[p-1]<x \leq A[p]$
+      3. [ ] el entero $p\in[0..n]$ tal que $A[p]\leq x < A[p+1]$
+      4. [ ] el entero $p\in[1..n]$ tal que $x = A[p]$
+      5. [ ] ningunos o mas que dos 
+***** Dos tipos de busqueda ordenada
+      :SOLUTION:
+      :END:
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
+      :END:
+      Dado el codigo siguente, cual es la mejor manera de completarlo
+      para minimizar la complejidad (non asymptotica) en el peor caso?
+      El el caso promedio?
+
+      insertionRank(x,A,l,r) { 
+        if( $r-l<2$ ) return $l$ else { m=(l+r)/2; ... }
+      }
+    
+      1. [ ] if( $x<A[m]$ )  return insertionRank(x,A,l,m)
+             else if( $x>A[m]$ )  return insertionRank(x,A,m,r)
+             else if( $x=A[m]$ )  return $m$
+	     endif
+      2. [ ] if( $x=A[m]$ )  return $m$
+             else if( $x<A[m]$ )  return insertionRank(x,A,l,m)
+             else if( $x>A[m]$ )  return insertionRank(x,A,m,r)
+	     endif
+      3. [ ] if( $x=A[m]$ )  return $m$
+             else if( $x<A[m]$ )  return insertionRank(x,A,l,m)
+             else return insertionRank(x,A,m,r)
+	     endif
+      4. [ ] if( $x<A[m]$ )  return insertionRank(x,A,l,m)
+             else return insertionRank(x,A,m,r)
+	     endif
+      5. [ ] performan iguales todos en el peor caso.
+	     
+***** Cota inferior por busqueda ordenada $n=1024$.
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
+      :END:
+      :SOLUTION:
+      $1+\log 1024=11$
+      :END:
+      :PROOF:
+      - Cada comparacion permite de reducir el tamano del domanio por dos.
+      - $1024=2^10$ es divido 10 veses por $10$ antes de ser reducido a $1$
+      - como NO sabemos si $x$ partenece a $A$, necesitamos una comparacion mas.
+      :END:
+      Dado un arreglo ordenado $A$ de $1024$ enteros y un entero $x$,
+      cuanto comparaciones con elementos del arreglo son necesarias
+      para decidir si $x$ pertenece a $A$ (en el peor caso)?
+      1. [ ] 9
+      2. [ ] 10
+      3. [ ] 11
+      4. [ ] 1024
+      5. [ ] otra
+
+***** Cota inferior por busqueda ordenada general $n$.
+      :SOLUTION:
+      :END:
+      :PROOF:
+      :END:
+      Dado un arreglo ordenado $A$ de $n$ enteros y un entero $x$,
+      cuanto comparaciones con elementos del arreglo son necesarias
+      para decidir si $x$ pertenece a $A$ (en el peor caso)?
+      2. [ ] $\lceil\lg n\rceil$
+      2. [ ] $1+\lceil\lg n\rceil$
+      3. [ ] $n-1$
+      4. [ ] $n$
+      5. [ ] otra
+
+***** Definicion del modelo de comparacion
+      :LOGBOOK:
+      - State "TODO"       from "NEXT"       [2011-03-22 Tue 12:28]
+      :END:
+      :SOLUTION:
+      :END:
+      :PROOF:
+      :END:
+      Cuales de estos algoritmos simples son en el modelo de
+      comparacion?
+      1. [ ] c=0; for(int i=1; i<n; i++) { if(A[i]>A[i+1]) c++;}
+      2. [ ] for(int i=1; i<n; i++) { if(A[i]>A[i+1]) print i;}
+      ; 3. [ ] for(int i=1; i<n; i++) { if(A[i]>A[i+1]) print i;}
+      ; 4. [ ] for(int i=1; i<n; i++) { if(A[i]>A[i+1]) print i;}
+      5. [ ] ningunos
+
+***** Relacion entre codificacion y busqueda
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-26 Sat 17:51]
+      - State "NEXT"       from ""           [2011-03-17 Thu 12:01]
+      :END:
+   :SOLUTION:     
+   A cada algoritmo de busqueda corresponde una codificacion de enteros.
+   :END:
+   :PROOF: 
+      1. [X] A cada algoritmo de busqueda corresponde una codificacion
+             de enteros. -> Considera el algoritmo de interpolacion:
+             no le corresponde una codificacion de entero, al menos no
+             con la reduccion vista en curso.
+      2. [ ] A cada codificacion de enteros corresponde un algoritmo
+             de busqueda. -> El algoritmo de decodificacion es un
+             algoritmo de busqueda, preguntando a cada bit alguna
+             informacion.
+      3. [ ] A algunos algoritmos de busqueda corresponde una
+             codificacion de enteros -> busqueda binaria y codigo
+             binario es un ejemplo.
+      4. [ ] A algunas codificaciones de enteros corresponde un
+             algoritmo de busqueda -> codigo binario y busqueda
+             binarya.
+   :END:
+      Cual de estas aserciones es falsa en el modelo de comparacion?
+      1. [ ] A cada algoritmo de busqueda corresponde una codificacion
+             de enteros.
+      2. [ ] A cada codificacion de enteros corresponde un algoritmo
+             de busqueda.
+      3. [ ] A algunos algoritmos de busqueda corresponde una
+             codificacion de enteros
+      4. [ ] A algunas codificaciones de enteros corresponde un
+             algoritmo de busqueda.
+      5. [ ] otra
+***** Busqueda Doblada
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-22 Tue 12:58]
+      - State "NEXT"       from ""           [2011-03-22 Tue 11:47]
+      :END:
+   :SOLUTION:     
+   ningunas
+   :END:
+   :PROOF: 
+      1. [ ] $\lg(1+n)$ comparaciones -> Busqueda binaria
+      2. [ ] $p+1$ comparaciones -> Busqueda secuencial
+      3. [ ] $2\lg p$ comparaciones -> Busqueda dublada
+      3. [ ] $2\lg(n-p)$ comparaciones -> Busqueda dublada, iniciando a la derecha
+  :END:
+      Cual de las asercions siguentes son falsas?
+      Dado una valor $x$ y un arreglo ordenado $A$ de $n$ valores,
+      existe un algoritmo calculando la posicion de inserción $p$ de
+      $x$ en $A$ en 
+      1. [ ] $\lg(1+n)$ comparaciones
+      2. [ ] $p+1$ comparaciones
+      3. [ ] $2\lg p$ comparaciones
+      3. [ ] $2\lg(n-p)$ comparaciones
+      5. [ ] ningunas o mas que dos.
+***** Compression de enteros
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-22 Tue 12:59]
+      - State "NEXT"       from ""           [2011-03-22 Tue 11:48]
+      :END:
+      Dado un entero $x\in[1..n]$, existe un esquema de
+      codificacion representando $x$ con 
+      1. [ ] $\lg n$ bits,
+      2. [ ] $2\lg p$ bits,
+      3. [ ] $p$ bits,
+      4. [ ] $2\lg(n-p)$ bits,
+      6. [ ] ningunas o mas que dos.
+***** Cota inferior ordenamiento (en el modelo de comparacion)
+      :LOGBOOK:
+      - State "NEXT"       from ""           [2011-03-17 Thu 11:53]
+      :END:
+      :SOLUTION:
+      :END:
+      :PROOF:
+      :END:
+      Decir que "Ordenar es en $\Omega(n\lg n)$ (en el modelo de
+      comparacion) significa que
+      1. [ ] no se puede ordenar en $o(n\lg n)$  comparaciones
+      2. [ ] ninguno algoritmo conocido (del modelo de comparacion)
+             ordena en $o(n\lg n)$ comparaciones
+      3. [ ] no se puede ordenar en tiempo $o(n\lg n)$ 
+      4. [ ] ninguno algoritmo conocido (del modelo de comparacion)
+             ordena en tiempo $o(n\lg n)$
+      5. [ ] otra respuesta
+
+***** NEXT Complejidad en promedio de un algoritmo
+      :SOLUTION:
+      Ningunas. Falta una distribucion $(p_i)_{i\in[1..2^n]}$ sobre
+      las instancias legales por $A$ de tamaño $n$
+      :END:
+      :LOGBOOK:
+      - State "NEXT"       from ""           [2011-03-22 Tue 11:55]
+      - State "NEXT"       from ""           [2011-03-22 Tue 11:48]
+      :END:
+      Dado un entero fijado $n$, un algoritmo deterministico $A$. Cual
+      de estas definiciones corresponde a la complejidad en promedio
+      de $A$?
+      1. [ ] $\sum_{x,|x|=n} C(A,x)/n$
+      2. [ ] $\sum_{x,|x|=n} C(A,x)/2^n$
+      3. [ ] $\sum_{x,|x|=n} C(A,x) / \#\{x, |x|=n\}$
+      4. [ ] El promedio de su complejidad sobre cada instancia.
+      5. [ ] ningunas o mas de dos.
+***** NEXT Complejidad en promedio de un problema
+      :LOGBOOK:
+      - State "NEXT"       from ""           [2011-03-22 Tue 11:54]
+      - State "NEXT"       from ""           [2011-03-22 Tue 11:48]
+      :END:
+      Dado un problema $Pb$, un entero fijado $n$, un conjunto
+      $X_n=(x_i)_{i\in[1..2^n]}$ de instancias legales por $Pb$ y una
+      distribucion $(p_i)_{i\in[1..2^n]}$ sobre $X_n$. La complejidad
+      en promedio de $Pb$ es
+      1. [ ] $\max_A \sum_i p_i C(A,x_i)$
+      2. [ ] $\min_A \sum_i p_i C(A,x_i)$
+      3. [ ] $\sum_i p_i \max_A C(A,x_i)$
+      4. [ ] $\sum_i p_i \min_A C(A,x_i)$
+      5. [ ] ningunas
+***** NEXT Complejidad aleatorizada
+      :LOGBOOK:
+      - State "NEXT"       from ""           [2011-03-22 Tue 11:48]
+      :END:
+      1. [ ] 
+***** NEXT Relacion entre Complejidad en Promedio y en el peor caso
+      :LOGBOOK:
+      - State "NEXT"       from ""           [2011-03-17 Thu 10:30]
+      :END:
+      * Nota
+	- $C(A,I)$ la complejidad de un algoritmo $A$ sobre la
+          instancia $I$, y
+	- $E_I(C(A,I))$ la complejidad en el peor caso sobre las
+          instancias de tamano $n$, y
+	- $E_I(C(A,I))$ la complejidad en promedio por la distribucion
+          uniforme sobre las instancias de tamano $n$.
+      * Cuales de estas relaciones son verdad?
+	1. [ ] $E_I(C(A,I)) \leq \max_I C(A,I)$
+	2. [ ] $E_I(C(A,I)) < \max_I C(A,I)$
+	3. [ ] La complejidad en el peor caso (de un algoritmo) es siempre peor que la complejidad en promedio
+	4. [ ] La complejidad en promedio (de un algoritmo) nunca es peor que la complejidad en el peor caso
+	5. [ ] ningunas
+
+***** Tecnicas de cotas inferiores
+      :LOGBOOK:
+      - State "DONE"       from "NEXT"       [2011-03-22 Tue 13:19]
+      :END:
+      Cual(es) de las tecnicas siguentes permitten de mostrar cotas
+      inferiores para la complejidad en promedio?
+	1. [ ] lemma del ave
+	2. [ ] Estrategia de Adversario
+	3. [ ] Arbol Binario de Decision
+	4. [ ] lemma del minimax
+	5. [ ] ningunas o mas de dos.
 *** Metodología de experimentación
     :PROPERTIES:
     :Effort:   90
+    :Talks:    1
     :END:
 **** PRERREQUISITOS
      - de las apuntes de CC3001:
@@ -694,597 +1289,10 @@ persecución sufrida por Alan Turing.
      - Research Design: Qualitative, Quantitative, and Mixed Methods Approaches 
        John W. Creswell
        http://www.amazon.com/Research-Design-Qualitative-Quantitative-Approaches/
-*** Complejidad Computacional Deterministica: cotas inferiores
+*** Programacion Dinamica y Recurrencias
     :PROPERTIES:
     :Effort:   2*90
-    :END:
-    adversario, teoria de la informacion, reduccion
-**** PREREQUISITOS
-     - de las apuntes de CC3001:
-       - Ordenacion / Cotas inferiores http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/Ordenacion/#1
-       - Ordenacion / Merge sort http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/Ordenacion/#5
-     - de las apuntes de CC4102:
-       - min max
-**** Minimo Maximo de un  arreglo
-***** PREREQUISITOS
-****** Cotas Inferiores en apuntes de CC3001			    :READING:
-    - http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/Ordenacion/#1
-***** Minimo (resp. maximo) de un arreglo
-    - Cota superior
-    - Cota inferior
-***** Calcular el Minimo y el Maximo de un Arreglo en una sola computacion
-    - Cota superior?
-      - cota superior para max + cota superior para min
-    - cota inferior?
-      - cota inferior para min + cota superior para max?
-      - min(cota inferior para min , cota superior para max?)
-
-***** Cota superior para el problema de minmax
-
-      * Calcular el minimo con el algoritmo previo, y el maximo
-       	con un algoritmo simetrico, da una complejidad de $2n-2$
-       	comparaciones, que es demasiado.
-      * El algoritmo siguente calcula el max y el min en
-       	$\frac{3n}{2}-2$ comparaciones:
-       1. Dividir $A$ en $\lfloor n/2 \rfloor$ pares (y
-	  eventualemente un elemento mas, $x$).
-       2. Comparar los dos elementos de cada par.
-       3. Ponga los elementos superiores en el grupo $S$, y los
-	  elementos inferiores en el grupo $I$.
-       4. Calcula el minima $m$ del grupo $I$ con el algorimo de la
-	  pregunta previa, que performa $\lfloor n/2 \rfloor-1$ comparaciones
-       5. Calcula el maxima $M$ del grupo $I$ con un algoritmo
-	  simetrico, con la misma complejidad.
-       6. Si $n$ es par,
-       	 + $m$ y $M$ son respectivamente el minimo y el maximo de $A$.
-       7. Sino, si $x<m$, 
-	  + $x$ y $M$ son respectivamente el minimo y el maximo de $A$.
-       8. Sino, si $x>M$, 
-	  + $m$ y $x$ son respectivamente el minimo y el maximo de $A$.
-       9. Sino
-	  + $m$ y $M$ son respectivamente el minimo y el maximo de $A$.
-      * La complejidad total del algoritmo es
-       -  $n/2+2(n/2-1)=3n/2-2\in 3n/2 + O(1)$ si $n$ es par
-       -  $(n-1)/2 + 2(n-1)/2 +2 = 3n/2 + 1/2\in 3n/2 + O(1)$ si
-	  $n$ es impar.
-       -  en la clase $3n/2 + O(1)$ en ambos casos.
-
-***** Cota inferior para el problema de minmax
-      * Sean las variables siguentes:
-       	- $O$ los $o$ elementos todavia no comparados;
-       	- $G$ los $g$ elementos que ``ganaron'' todas sus comparaciones hasta ahora;
-       	- $P$ los $p$ elementos que ``perdieron'' todas sus comparaciones hasta ahora;
-       	- $E$ las $e$ valores eliminadas (que perdieron al menos una comparacion, y ganaron al menos una comparacion);
-      -  $(o,g,p,e)$ describe el estado de cualquier algoritmo:
-       	-  siempre $o+g+p+e=n$;
-       	-  al inicio, $g=p=e=0$ y $o=n$;
-       	-  al final, $o=0$, $g=p=1$, y $e=n-2$.
-      -  Despues una comparacion $a?b$ en cualquier algoritmo del
-       	 modelo de comparacion, $(o,g,p,e)$ cambia en funcion del
-       	 resultado de la comparacion de la manera siguente:
-       	 $$
-       	 \begin{array}{c|c|c|c|c}
-       	 & a\in O        & a\in G               & a\in P               & a\in E      \\ 
-       	 \hline %--------------------------------------
-       	 b\in O & o-2,g+1,p+1,e & o-1,p,e+1            & o-1,g,p,e+1          & o-1,g+1,p,e \\
-       	 &               & o-1,g,p+1,e          & o-1,g+1,p,e          & o-1,g,p+1,e \\
-       	 \hline %--------------------------------------
-       	 b\in G &               & o,g-1,p,e+1          & o,g,p,e              & o,g,p,e     \\ 
-       	 &               &                      & o,g-1,p-1,e+2        & o,g-1,p,e+1 \\ 
-       	 \hline %--------------------------------------
-       	 b\in P &               &                      & o,g,p-1,e+1          & o,g,p,e     \\ 
-       	 &               &                      &                      & o,g,p-1,e+1 \\ 
-       	 \hline %--------------------------------------
-       	 b\in E &               &                      &                      & o,g,p,e
-       	 \end{array}
-       	 $$
-      -  En algunas configuraciones, el cambio del vector estado depende del resultado de la comparacion: un adversario puede
-       	 maximizar la complejidad del algoritmo eligando el resultado de cada comparacion. El arreglo siguente contiene en graso las
-       	 opciones que maximizan la complejidad del algoritmo:
-       	 $$
-       	 \begin{array}{c|c|c|c|c}
-       	 & a\in O        & a\in G               & a\in P               & a\in E           \\ 
-       	 \hline %--------------------------------------
-       	 b\in O & o-2,g+1,p+1,e & o-1,p,e+1            & o-1,g,p,e+1          & o-1,g+1,p,e      \\
-       	 &               & \mathbf{o-1,g,p+1,e} & \mathbf{o-1,g+1,p,e} & o-1,g,p+1,e      \\
-       	 \hline %--------------------------------------
-       	 b\in G &               & o,g-1,p,e+1          & \mathbf{o,g,p,e}     & \mathbf{o,g,p,e} \\ 
-       	 &               &                      & o,g-1,p-1,e+2        & o,g-1,p,e+1      \\ 
-       	 \hline %--------------------------------------
-       	 b\in P &               &                      & o,g,p-1,e+1          & \mathbf{o,g,p,e} \\ 
-       	 &               &                      &                      & o,g,p-1,e+1      \\ 
-       	 \hline %--------------------------------------
-       	 b\in E &               &                      &                      & o,g,p,e
-       	 \end{array}
-       	 $$
-      -  Con estas opciones, hay
-       	-  $\lceil n/2\rceil$ transiciones de $O$ a $G\cup P$, y
-       	-  $n-2$ transiciones de $G\cup P$ a $E$.
-      -  Eso resulta en una complejidad en el peor caso de $\lceil
-       	 3n/2 \rceil-2 \in 3n/2 +O(1)$ comparaciones.
-**** Busqueda Ordenada (en el modelo de comparaciones)
-       	1. Cota superior: $2\lg n$ vs $1+\lg n$
-       	2. Cota inferior en el peor caso: Strategia de Adversario
-	   cota inferior en el peor caso de  $1+\lg n$
-       	3. Cota inferior en el caso promedio uniforme
-	   - Teoria de la Informacion
-	   - = Arbol de Decision
-	   - cota inferior de $\lg(2n+1)$, i.e. de $1+\lceil\lg(n+1/2)\rceil$
-       	4. La complejidad del problema
-	   - en el peor caso es $\Theta(\lg n)$
-	   - en el caso promedio es $\Theta(\lg n)$
-       	5. Pregunta: en este problema las cotas inferiores en el peor
-	   caso y en el mejor caso son del mismo orden. Siempre es verdad?
-**** Busqueda desordenada
-       1. Complejidad en el peor caso es $\Theta(n)$
-       2. Complejidad en el caso promedio?
-	  - cota superior
-	    - Move To Front
-	    - ?BONUS? Transpose
-	  - cota inferior
-	    - algoritmo offline, lemma del ave
-	  - A VER EN CASA O TUTORIAL: Huffman?
-**** Ordenamiento (en el modelo de comparaciones)
-      - cota superior $O(n\lg n)$
-      - cota inferior en el peor caso
-	- cual tecnica?
-	  - lema del ave?
-	  - Strategia de Adversario?
-	  - Arbol Binario de Decision
-	- Resultado:
-	  - $\Omega(n \lg n)$
-      - cota inferior en el caso promedio
-	- $\Omega(n \lg n)$
-**** Lista de tecnicas para mostrar cotas inferiores
-    1. lema del ave
-    2. Strategia de Adversario
-    3. Arbol Binario de Decision
-    4. Lemma del Minimax (para complejidad en promedio y complejidad
-       de algoritmos aleatroizados)
-**** BONUS: complejidad en promedio y aleatorizada
-     - La relacion entre 
-       - complejidad en promedio de un algoritmo deterministico
-       - complejidad en el peor caso de un algoritmo aleatorizado
-         (promedio sobre su aleatoria)
-
-
-**** PREGUNTAS [6/8]						 :PREGUNTAS:
-***** DONE Cota superior de (la complejidad de) Max ord
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-15 Tue 12:20]
-      :END:
-      Dado un arreglo ordenado de $n$ enteros, en cuanto accessos al
-      arreglo pueden  calcular su valor maximal?
-      1. [ ] $0$
-      2. [ ] $1$
-      3. [ ] $n-1$
-      4. [ ] $n$
-      5. [ ] otra
-***** NEXT Definicion de la mediana
-      Dado un arreglo de $n$ enteros, cual es la definicion correcta
-      de la mediana?
-      1. [ ] El promedio de las valores minima y maxima del arreglo.
-      2. [ ] La valor en el centro del arreglo.
-      3. [ ] La valor en el centro del arreglo ordenado.
-      4. [ ] La valor superior a $\lceil(n-1)/2\rceil$ valores y inferior a $\lfloor(n-1)/2\rfloor$ valores. 
-      5. [ ] otra respuesta.
-***** DONE Dificultad de problemas en arreglos
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
-      :END:
-      Dado un arreglo de $n$ enteros, cual problema requiere mas
-      accessos al arreglo? Mas computacion?
-      1. [ ] Calcular la valor minima
-      2. [ ] Calcular la valor maxima
-      3. [ ] Calcular la valor mediana
-      4. [ ] Calcular la valor promedia
-      5. [ ] Son todos iguales
-***** DONE [#A] Cota Inferior para Max
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
-      - State "NEXT"       from ""           [2011-03-15 Tue 11:08]
-      :END:
-      Dado un arreglo de $n$ enteros, cuanto comparaciones entre los
-      elementos del arreglo se necessitan para calcular su valor
-      maximal?
-      1. [ ] $0$
-      2. [ ] $1$
-      3. [ ] $n-1$
-      4. [ ] $n$
-      5. [ ] otra respuesta
-***** DONE Definicion del problema de MinMax
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
-      :END:
-      Dado un arreglo $A$ de $n$ enteros, cual es la definicion del
-      problema de "minmax"?
-      1. [ ] calcular $\min_{i\in[1..n],j\in[i..n]} A[i]$
-      2. [ ] calcular $\min_{i\in[1..n]} \max{j\in[i..n]} A[i]$
-      3. [ ] calcular $(\min_{i\in[1..n]} A[i], \max_{i\in[1..n]} A[i])$
-      4. [ ] calcular $(\min_{i\in[1..n]} A[i], \max_{j\in[1..n]} A[j])$
-      5. [ ] otra respuesta
-      
-***** DONE Cotas de (la complejidad de) problemas combinados
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
-      :END:
-      Dado dos problemas $A$ y $B$ (e.g. min y max), cada uno con un
-      algoritmo que le resuelve optimalemente con complejidad $f_A(n)$
-      y $f_B(n)$, cual es la complejidad del problema $AB$ (e.g. min
-      max)?
-      1. [ ] $\min\{f_A(n)$ , f_B(n)\}$
-      2. [ ] $f_A(n)$ + f_B(n)$
-      3. [ ] $(f_A(n)$ + f_B(n))/2$
-      4. [ ] $\max\{f_A(n)$ , f_B(n)\}$
-      5. [ ] otra respuesta
-***** DONE Cota *superior* de (la complejidad de) Min Max
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-15 Tue 13:39]
-      :END:
-   :SOLUTION:     
-   $3n/2-2$ si $n$ es par, $3n/2 + 1/2$ si $n$ es impar.
-   :END:
-   :PROOF: 
-   cf apuntes
-   :END:
-      Dado un arreglo de $n$ enteros, en cuanto comparaciones
-      (cantidad exacta, no asimptotica) entre los elementos del
-      arreglo pueden calcular su valor maximal y minimal?
-      1. [ ] $n-1$
-      2. [ ] $3n/2-2$ si $n$ es par, $3n/2 + 1/2$ si $n$ es impar.
-      3. [ ] $(n-1)+(n-2)$
-      4. [ ] $2(n-1)$
-      5. [ ] otra respuesta
-***** NEXT Cota *inferior* de (la complejidad de) Min Max
-   :SOLUTION:     
-   $\lceil 3n/2 \rceil-2$
-   :END:
-   :PROOF: 
-   cf apuntes
-   :END:
-      Dado un arreglo de $n$ enteros, cuanto comparaciones (cantidad
-      exacta, no asimptotica) entre los elementos del arreglo se
-      necessitan para calcular su valor maximal y minimal?
-      1. [ ] $n-1$
-      2. [ ] $\lceil 3n/2 \rceil-2$
-      3. [ ] $(n-1)+(n-2)$
-      4. [ ] $2(n-1)$
-      5. [ ] otra respuesta
-***** DONE Juego de las preguntas, $n=4$
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
-      - State "NEXT"       from "CANC"       [2011-03-16 Wed 17:55]
-      - State "CANC"       from "NEXT"       [2011-03-16 Wed 17:49]
-      :END:
-      :SOLUTION:
-      $2$
-      :END:
-      :PROOF:
-      - $x<3$?
-	- $x<2$
-	  - 1
-	  - 2
-	- $x<4
-	  - 3
-	  - 4
-      :END:
-      Cuanta preguntas (e.g. "$x<4$?", "x=2"?)  se necesitan para
-      adivinar un entero entre $1$ y $4 (i.e. $x\in[1..4]$)?
-      1. [ ] 1
-      2. [ ] 2
-      3. [ ] 3
-      4. [ ] 4
-      5. [ ] otra
-***** DONE Juego de las preguntas, $n=1024$
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
-      :END:
-      :SOLUTION:
-      $\log 1024=10$
-      :END:
-      :PROOF:
-      - Cada pregunta permite de reducir el tamano del domanio por dos.
-      - $1024=2^10$ es divido 10 veses por $10$ antes de ser reducido a $1$
-      - como sabemos que $x$ es un entero (en el rango), es suficiente
-      :END:
-      Cuanta preguntas (e.g. "$x<10$?", "x=10"?)  se necesitan para
-      adivinar un entero entre $1$ y $1024$?
-      1. [ ] 8
-      2. [ ] 9
-      3. [ ] 10
-      4. [ ] 11
-      5. [ ] otra
-
-***** DONE Codificacion de un simbolo
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
-      :END:
-      Dado 1 simbolo elegido a dentro de $[1..\sigma]$
-      1. [ ] no se puede codificar *nunca* en $o(\lg\sigma)$ bits
-      2. [X] no se puede codificar *siempre* en $o(\lg\sigma)$ bits
-      3. [X] no se sabe *como codificar siempre* en $o(\lg\sigma)$ bits
-      4. [ ] no se sabe *si nunca se puede codificar* en $o(\lg\sigma)$ bits
-      5. [ ] otra
-
-***** DONE Definicion de un arbol de decision
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
-      - State "NEXT"       from ""           [2011-03-17 Thu 11:55]
-      :END:
-      :SOLUTION:
-      :END:
-      :PROOF:
-      :END:
-      Un arbol de decision es definido como un arbol
-      1. [ ] modelisando algoritmos en el modelo de
-             comparacion.
-      2. [ ] binario donde cada hoja identifica una instancia.
-      3. [ ] binario donde cada nodo prueba una caracteristica de la
-             instancia.
-      4. [X] un arbol de grado finito donde cada hoja indica una
-             decision sobre la instancia.
-      5. [ ] otra.
-
-
-***** DONE Codificacion de $n$ simbolos
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
-      :END:
-      Dado $n$ simbolos elegido a dentro de un alfabeto de tamaño  $\sigma$
-      1. [ ] no se puede codificar *nunca* en $o(n\lg\sigma)$ bits
-      2. [X] no se puede codificar *siempre* en $o(n\lg\sigma)$ bits
-      3. [X] no se sabe *como codificar siempre* en $o(n\lg\sigma)$ bits
-      4. [ ] no se sabe *si nunca se puede codificar* en $o(n\lg\sigma)$ bits
-      5. [ ] otra
-***** DONE Definicion de "InsertionRank"
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
-      :END:
-      Dado un arreglo ordenado $A[1..n]$ de $n$ valores y una valor
-      $x$, cual(es) de estas definiciones del /Posicion de Insercion/
-      ("Insertion Rank") de $x$ en $A$ son incorectas?
-      ($A[0]=-\infty$ y $A[n+1]=+\infty$)
-      1. [ ] la posicion en cual $x$ deberia ser insertado por dejar
-             $A$ ordenado
-      2. [X] el entero $p\in[1..n+1]$ tal que $A[p-1]<x \leq A[p]$
-      3. [ ] el entero $p\in[0..n]$ tal que $A[p]\leq x < A[p+1]$
-      4. [ ] el entero $p\in[1..n]$ tal que $x = A[p]$
-      5. [ ] ningunos o mas que dos 
-***** DONE Dos tipos de busqueda ordenada
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
-      :END:
-      Dado el codigo siguente, cual es la mejor manera de completarlo
-      para minimizar la complejidad (non asymptotica) en el peor caso?
-      El el caso promedio?
-
-      insertionRank(x,A,l,r) { 
-        if( $r-l<2$ ) return $l$ else { m=(l+r)/2; ... }
-      }
-    
-      1. [ ] if( $x<A[m]$ )  return insertionRank(x,A,l,m)
-             else if( $x>A[m]$ )  return insertionRank(x,A,m,r)
-             else if( $x=A[m]$ )  return $m$
-	     endif
-      2. [ ] if( $x=A[m]$ )  return $m$
-             else if( $x<A[m]$ )  return insertionRank(x,A,l,m)
-             else if( $x>A[m]$ )  return insertionRank(x,A,m,r)
-	     endif
-      3. [ ] if( $x=A[m]$ )  return $m$
-             else if( $x<A[m]$ )  return insertionRank(x,A,l,m)
-             else return insertionRank(x,A,m,r)
-	     endif
-      4. [ ] if( $x<A[m]$ )  return insertionRank(x,A,l,m)
-             else return insertionRank(x,A,m,r)
-	     endif
-      5. [ ] performan iguales todos en el peor caso.
-	     
-***** DONE Cota inferior por busqueda ordenada $n=1024$.
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-17 Thu 13:32]
-      :END:
-      :SOLUTION:
-      $1+\log 1024=11$
-      :END:
-      :PROOF:
-      - Cada comparacion permite de reducir el tamano del domanio por dos.
-      - $1024=2^10$ es divido 10 veses por $10$ antes de ser reducido a $1$
-      - como NO sabemos si $x$ partenece a $A$, necesitamos una comparacion mas.
-      :END:
-      Dado un arreglo ordenado $A$ de $1024$ enteros y un entero $x$,
-      cuanto comparaciones con elementos del arreglo son necesarias
-      para decidir si $x$ pertenece a $A$ (en el peor caso)?
-      1. [ ] 9
-      2. [ ] 10
-      3. [ ] 11
-      4. [ ] 1024
-      5. [ ] otra
-
-***** NEXT Cota inferior por busqueda ordenada general $n$.
-      :SOLUTION:
-      :END:
-      :PROOF:
-      :END:
-      Dado un arreglo ordenado $A$ de $n$ enteros y un entero $x$,
-      cuanto comparaciones con elementos del arreglo son necesarias
-      para decidir si $x$ pertenece a $A$ (en el peor caso)?
-      2. [ ] $\lceil\lg n\rceil$
-      2. [ ] $1+\lceil\lg n\rceil$
-      3. [ ] $n-1$
-      4. [ ] $n$
-      5. [ ] otra
-
-***** TODO Definicion del modelo de comparacion
-      :LOGBOOK:
-      - State "TODO"       from "NEXT"       [2011-03-22 Tue 12:28]
-      :END:
-      :SOLUTION:
-      :END:
-      :PROOF:
-      :END:
-      Cuales de estos algoritmos simples son en el modelo de
-      comparacion?
-      1. [ ] c=0; for(int i=1; i<n; i++) { if(A[i]>A[i+1]) c++;}
-      2. [ ] for(int i=1; i<n; i++) { if(A[i]>A[i+1]) print i;}
-      ; 3. [ ] for(int i=1; i<n; i++) { if(A[i]>A[i+1]) print i;}
-      ; 4. [ ] for(int i=1; i<n; i++) { if(A[i]>A[i+1]) print i;}
-      5. [ ] ningunos
-
-***** DONE [#A] Relacion entre codificacion y busqueda
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-26 Sat 17:51]
-      - State "NEXT"       from ""           [2011-03-17 Thu 12:01]
-      :END:
-   :SOLUTION:     
-   A cada algoritmo de busqueda corresponde una codificacion de enteros.
-   :END:
-   :PROOF: 
-      1. [X] A cada algoritmo de busqueda corresponde una codificacion
-             de enteros. -> Considera el algoritmo de interpolacion:
-             no le corresponde una codificacion de entero, al menos no
-             con la reduccion vista en curso.
-      2. [ ] A cada codificacion de enteros corresponde un algoritmo
-             de busqueda. -> El algoritmo de decodificacion es un
-             algoritmo de busqueda, preguntando a cada bit alguna
-             informacion.
-      3. [ ] A algunos algoritmos de busqueda corresponde una
-             codificacion de enteros -> busqueda binaria y codigo
-             binario es un ejemplo.
-      4. [ ] A algunas codificaciones de enteros corresponde un
-             algoritmo de busqueda -> codigo binario y busqueda
-             binarya.
-   :END:
-      Cual de estas aserciones es falsa en el modelo de comparacion?
-      1. [ ] A cada algoritmo de busqueda corresponde una codificacion
-             de enteros.
-      2. [ ] A cada codificacion de enteros corresponde un algoritmo
-             de busqueda.
-      3. [ ] A algunos algoritmos de busqueda corresponde una
-             codificacion de enteros
-      4. [ ] A algunas codificaciones de enteros corresponde un
-             algoritmo de busqueda.
-      5. [ ] otra
-***** DONE Busqueda Doblada
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-22 Tue 12:58]
-      - State "NEXT"       from ""           [2011-03-22 Tue 11:47]
-      :END:
-   :SOLUTION:     
-   ningunas
-   :END:
-   :PROOF: 
-      1. [ ] $\lg(1+n)$ comparaciones -> Busqueda binaria
-      2. [ ] $p+1$ comparaciones -> Busqueda secuencial
-      3. [ ] $2\lg p$ comparaciones -> Busqueda dublada
-      3. [ ] $2\lg(n-p)$ comparaciones -> Busqueda dublada, iniciando a la derecha
-  :END:
-      Cual de las asercions siguentes son falsas?
-      Dado una valor $x$ y un arreglo ordenado $A$ de $n$ valores,
-      existe un algoritmo calculando la posicion de inserción $p$ de
-      $x$ en $A$ en 
-      1. [ ] $\lg(1+n)$ comparaciones
-      2. [ ] $p+1$ comparaciones
-      3. [ ] $2\lg p$ comparaciones
-      3. [ ] $2\lg(n-p)$ comparaciones
-      5. [ ] ningunas o mas que dos.
-***** DONE Compression de enteros
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-22 Tue 12:59]
-      - State "NEXT"       from ""           [2011-03-22 Tue 11:48]
-      :END:
-      Dado un entero $x\in[1..n]$, existe un esquema de
-      codificacion representando $x$ con 
-      1. [ ] $\lg n$ bits,
-      2. [ ] $2\lg p$ bits,
-      3. [ ] $p$ bits,
-      4. [ ] $2\lg(n-p)$ bits,
-      6. [ ] ningunas o mas que dos.
-***** DONE Cota inferior ordenamiento (en el modelo de comparacion)
-      :LOGBOOK:
-      - State "NEXT"       from ""           [2011-03-17 Thu 11:53]
-      :END:
-      :SOLUTION:
-      :END:
-      :PROOF:
-      :END:
-      Decir que "Ordenar es en $\Omega(n\lg n)$ (en el modelo de
-      comparacion) significa que
-      1. [ ] no se puede ordenar en $o(n\lg n)$  comparaciones
-      2. [ ] ninguno algoritmo conocido (del modelo de comparacion)
-             ordena en $o(n\lg n)$ comparaciones
-      3. [ ] no se puede ordenar en tiempo $o(n\lg n)$ 
-      4. [ ] ninguno algoritmo conocido (del modelo de comparacion)
-             ordena en tiempo $o(n\lg n)$
-      5. [ ] otra respuesta
-
-***** NEXT Complejidad en promedio de un algoritmo
-      :SOLUTION:
-      Ningunas. Falta una distribucion $(p_i)_{i\in[1..2^n]}$ sobre
-      las instancias legales por $A$ de tamaño $n$
-      :END:
-      :LOGBOOK:
-      - State "NEXT"       from ""           [2011-03-22 Tue 11:55]
-      - State "NEXT"       from ""           [2011-03-22 Tue 11:48]
-      :END:
-      Dado un entero fijado $n$, un algoritmo deterministico $A$. Cual
-      de estas definiciones corresponde a la complejidad en promedio
-      de $A$?
-      1. [ ] $\sum_{x,|x|=n} C(A,x)/n$
-      2. [ ] $\sum_{x,|x|=n} C(A,x)/2^n$
-      3. [ ] $\sum_{x,|x|=n} C(A,x) / \#\{x, |x|=n\}$
-      4. [ ] El promedio de su complejidad sobre cada instancia.
-      5. [ ] ningunas o mas de dos.
-***** NEXT Complejidad en promedio de un problema
-      :LOGBOOK:
-      - State "NEXT"       from ""           [2011-03-22 Tue 11:54]
-      - State "NEXT"       from ""           [2011-03-22 Tue 11:48]
-      :END:
-      Dado un problema $Pb$, un entero fijado $n$, un conjunto
-      $X_n=(x_i)_{i\in[1..2^n]}$ de instancias legales por $Pb$ y una
-      distribucion $(p_i)_{i\in[1..2^n]}$ sobre $X_n$. La complejidad
-      en promedio de $Pb$ es
-      1. [ ] $\max_A \sum_i p_i C(A,x_i)$
-      2. [ ] $\min_A \sum_i p_i C(A,x_i)$
-      3. [ ] $\sum_i p_i \max_A C(A,x_i)$
-      4. [ ] $\sum_i p_i \min_A C(A,x_i)$
-      5. [ ] ningunas
-***** NEXT Complejidad aleatorizada
-      :LOGBOOK:
-      - State "NEXT"       from ""           [2011-03-22 Tue 11:48]
-      :END:
-      1. [ ] 
-***** NEXT Relacion entre Complejidad en Promedio y en el peor caso
-      :LOGBOOK:
-      - State "NEXT"       from ""           [2011-03-17 Thu 10:30]
-      :END:
-      * Nota
-	- $C(A,I)$ la complejidad de un algoritmo $A$ sobre la
-          instancia $I$, y
-	- $E_I(C(A,I))$ la complejidad en el peor caso sobre las
-          instancias de tamano $n$, y
-	- $E_I(C(A,I))$ la complejidad en promedio por la distribucion
-          uniforme sobre las instancias de tamano $n$.
-      * Cuales de estas relaciones son verdad?
-	1. [ ] $E_I(C(A,I)) \leq \max_I C(A,I)$
-	2. [ ] $E_I(C(A,I)) < \max_I C(A,I)$
-	3. [ ] La complejidad en el peor caso (de un algoritmo) es siempre peor que la complejidad en promedio
-	4. [ ] La complejidad en promedio (de un algoritmo) nunca es peor que la complejidad en el peor caso
-	5. [ ] ningunas
-
-***** DONE Tecnicas de cotas inferiores
-      :LOGBOOK:
-      - State "DONE"       from "NEXT"       [2011-03-22 Tue 13:19]
-      :END:
-      Cual(es) de las tecnicas siguentes permitten de mostrar cotas
-      inferiores para la complejidad en promedio?
-	1. [ ] lemma del ave
-	2. [ ] Estrategia de Adversario
-	3. [ ] Arbol Binario de Decision
-	4. [ ] lemma del minimax
-	5. [ ] ningunas o mas de dos.
-*** Recurrencias y Introduccion a la programacion dinamica
-    :PROPERTIES:
-    :Effort:   2*90
+    :Talks:    2
     :END: 
 **** PREREQUISITOS
      - de las apuntes de CC3001:
@@ -1344,7 +1352,7 @@ persecución sufrida por Alan Turing.
 
 ** Memoria Secundaria [Algoritmos y Estructuras de Datos para] 
    :PROPERTIES:
-   :Talks:    6
+   :Talks:    4
    :mns:      540
    :END:
 *** DESCRIPCION de la Unidad
@@ -1364,6 +1372,9 @@ persecución sufrida por Alan Turing.
     * Colas de Prioridades
       - http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/TDA/#4
 *** Modelo de computacion en memoria secundaria. Accesos secuenciales y aleatorios
+    :PROPERTIES:
+    :Talks:    1
+    :END:
 **** MATERIAL A LEER
      - Memory hierarchy
        - http://en.wikipedia.org/wiki/Memory_hierarchy
@@ -1534,6 +1545,9 @@ persecución sufrida por Alan Turing.
       5. [ ] otra respuesta
 ***** TODO Costo (en plata) de la memoria
 *** Diccionarios en Memoria Externa
+    :PROPERTIES:
+    :Talks:    1
+    :END:
 **** MATERIAL A LEER
      - B-Arboles:
        - Arboles-B en apuntes de CC3001
@@ -1956,6 +1970,9 @@ persecución sufrida por Alan Turing.
       4. [ ] Genera un error
       5. [ ] otra respuesta
 *** Colas de prioridad en memoria secundaria. Cotas inferiores.
+    :PROPERTIES:
+    :Talks:    1
+    :END:
 **** MATERIAL a LEER
      - Apuntes CC3001
        - http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/TDA/#4 (last accessed on [2011-04-13 Wed])
@@ -2034,7 +2051,7 @@ persecución sufrida por Alan Turing.
          diccionario, con un $B$-heap es optima o no?
 	 - en el modelo de comparacion, se puede mostrar una cota
            inferior de $\Omega(\log_B n)$
-
+	   
 **** PREGUNTAS [3/10] 						 :PREGUNTAS:
 ***** Cola de Prioridad: operaciones
       :LOGBOOK:
@@ -2315,6 +2332,9 @@ persecución sufrida por Alan Turing.
        - http://portal.acm.org/citation.cfm?id=351827.384259
 
 *** Ordenamiento en memoria secundaria: Mergesort. *Cota inferior*.
+    :PROPERTIES:
+    :Talks:    1
+    :END:
 **** MATERIAL A LEER
        - Algoritmos de Ordenamiento en Apuntes de CC3001
 	 - http://www.dcc.uchile.cl/~bebustos/apuntes/cc3001/Ordenacion/
@@ -3329,7 +3349,7 @@ persecución sufrida por Alan Turing.
 
 ** Tecnicas avanzadas de diseno y analisis de algoritmos 
    :PROPERTIES:
-   :Talks:     8
+   :Talks:    8
    :mns:      720
    :END:
 *** Material relevante de los años previos:
@@ -3380,9 +3400,10 @@ persecución sufrida por Alan Turing.
      :END:
 
      - afuera del modelo de comparacion. 
-**** Algoritmos de Ordenamiento ( Counting Sort, Bucket sort, radix sort, string sort)
+**** Algoritmos de Ordenamiento (Counting Sort, Bucket sort, radix sort, string sort)
      :PROPERTIES:
      :Effort:   70:00
+     :Talks:    1
      :END:
 ***** Counting Sort   $O(\sigma + n)$
       :PROPERTIES:
@@ -3474,6 +3495,7 @@ persecución sufrida por Alan Turing.
 **** Busqueda por Interpolacion/Extrapolacion
      :PROPERTIES:
      :Effort:   90
+     :Talks:    1
      :END:
 
 	1. Introduccion:	     
@@ -3547,6 +3569,9 @@ persecución sufrida por Alan Turing.
 
 
 **** Estructuras de Arboles con Dominio Discreto
+     :PROPERTIES:
+     :Talks:    2
+     :END:
 ***** Tries o Arboles Digitales
       :PROPERTIES:
       :Effort:   45
@@ -3658,6 +3683,7 @@ persecución sufrida por Alan Turing.
 **** Hashing
      :PROPERTIES:
      :Effort:   60:00
+     :Talks:    1
      :END:
 ***** Introduccion
       :PROPERTIES:
@@ -3826,6 +3852,7 @@ persecución sufrida por Alan Turing.
 **** Hashing en memoria externa
      :PROPERTIES:
      :Effort:   30
+     :Talks:  
      :END:
 
  1) Que pasa si la tabla de hashing no queda en memoria?
@@ -3908,7 +3935,10 @@ persecución sufrida por Alan Turing.
        - analisis amortizada
        - analisis adaptativa
        - analisis competitiva (de algoritmos en linea)
-**** Analisi amortizada 
+**** Analisi amortizada
+     :PROPERTIES:
+     :Talks:    1
+     :END: 
 ***** MATERIAL A LEER
       - "Amortized Analysis Explained" by Rebecca Fiebrink
 	- http://www.cs.princeton.edu/~fiebrink/423/AmortizedAnalysisExplained_Fiebrink.pdf
@@ -4264,6 +4294,9 @@ persecución sufrida por Alan Turing.
       :END:
 ****** APUNTES
 **** Analisi adaptativa
+     :PROPERTIES:
+     :Talks:    1
+     :END:
 ***** MATERIAL A LEER
 	- Árbol 2-3 http://es.wikipedia.org/wiki/%C3%81rbol_2-3
 	- Finger tree http://en.wikipedia.org/wiki/Finger_tree
@@ -4316,6 +4349,9 @@ persecución sufrida por Alan Turing.
       :Effort:   10
       :END:
 **** Algoritmos en linea
+     :PROPERTIES:
+     :Talks:    1
+     :END:
 ***** List Accessing
       :PROPERTIES:
       :Effort:   45
@@ -4773,7 +4809,7 @@ persecución sufrida por Alan Turing.
    :END:
    :PROPERTIES:
    :ID:       47d0f647-5d5f-4d00-98c0-2b0fdfb9c237
-   :Talks:     10
+   :Talks:    8
    :mns:      900
    :END:
 *** Introduccion
@@ -4822,6 +4858,9 @@ persecución sufrida por Alan Turing.
       * State "DONE"       from "PAUS"       [2010-10-14 Thu 22:34]
       * State "PAUS"       from ""           [2010-10-14 Thu 15:05]
       :END:
+    :PROPERTIES:
+    :Talks:    2
+    :END:
 
   * REFERENCIA: 
     - Capitulo 1 en "Randomized Algorithms", de Rajeev Motwani and Prabhakar Raghavan.
@@ -5813,6 +5852,9 @@ REFERENCIA:
     :LOGBOOK:
     - State "DONE"       from ""           [2010-10-07 Thu 10:50]
     :END:
+    :PROPERTIES:
+    :Talks:    3
+    :END:
     - problemas que son o no aproximables
     - Referencia: Cap 35, "Approximation Algorithms", pag 1022, CLRS 2nd Edition
 **** (Motivacion)
@@ -5841,9 +5883,12 @@ REFERENCIA:
 	en tiempo polinomial, se puede considerar una aproximacion.
 
 **** *$p(n)$-aproximacion*
-***** Definicion
+
+     :PROPERTIES:
+     :END:***** Definicion
       :PROPERTIES:
       :Effort:   10
+      :Talks:    1
       :END:
 
       * Dado un problema de minimizacion, un algoritmo $A$ es un
@@ -6062,7 +6107,7 @@ REFERENCIA:
        polinomial (a menos que P=NP$).
 
        - PROOF:   
-	 - Supongamos que existe una p(n)-aproximacion de tiempo
+	 - Supongamos que existe una $p(n)$-aproximacion de tiempo
 	   polinomial.
 	 - Dado un grafo $G=(V,E)$
 	 - Construimos un grafo $G'=(V,E')$ tal que 
@@ -6080,6 +6125,9 @@ REFERENCIA:
 
 
 **** PTAS y FPTAS
+     :PROPERTIES:
+     :Talks:    1
+     :END:
 ***** Definiciones
       :PROPERTIES:
       :Effort:   10
@@ -6134,89 +6182,105 @@ REFERENCIA:
 	     - prune$(L,P)$      (remudando las valores $> P$)
 	   - return $\max(L)$
 
-      3) Solucion aproximada (inspirada del algoritmo exacto)
+	 + Complejidad del Algoritmo
+	   - Puede considerar $2^n$ conjuntos en total!
+
+
+      1) Solucion aproximada (inspirada del algoritmo exacto)
 
 	 + Operacion "Recorte"
-	    - Definimos la operacion de *recorte* de una lista L con
-	      parametro $\delta$:
-	      - Dado $y,z \in L$, $z$ *represente* a $y$ si
-		- $y /(1+\delta)   \leq   z   \leq y$ 
-	    - vamos a eliminar de $L$ todos los $y$ que sean representados
-	      por alguno $z$ no eliminado de $L$.
+	   - Definimos la operacion de *recorte* de una lista L con
+	     parametro $\delta$:
+	     - Dado $y,z \in L$, $z$ *represente* a $y$ si
+	       - $y /(1+\delta)   \leq   z   \leq y$ 
+	   - vamos a eliminar de $L$ todos los $y$ que sean representados
+	     por alguno $z$ no eliminado de $L$.
 
-	    - Recortar$(L,\delta)$
-	      - Sea $L=\{y_1,\ldots,y_m\}$
-	      - $L'\leftarrow \{y_1\}$
-	      - $\mathit{Last} \leftarrow y_1$
-	      - for $i\leftarrow 2$ to $m$
-		- si $y_i > \mathit{Last}(1+\delta)$
-		  - $L\leftarrow L'.\{y_i\}$
-		  - $\mathit{Last}\leftarrow y_i$
-	      - return $L'$
+	   - Recortar$(L,\delta)$
+	     - Sea $L=\{y_1,\ldots,y_m\}$
+	     - $L'\leftarrow \{y_1\}$
+	     - $\mathit{Last} \leftarrow y_1$
+	     - for $i\leftarrow 2$ to $m$
+	       - si $y_i > \mathit{Last}(1+\delta)$
+		 - $L\leftarrow L'.\{y_i\}$
+		 - $\mathit{Last}\leftarrow y_i$
+	     - return $L'$
 
 	 + Algoritmo de Aproximacion:
 
-	      - $L \leftarrow \{\emptyset\}$
-	      - for $i\leftarrow 1$ to $n$
-		- $L \leftarrow \mathit{merge} (L,L+x_i)$
-		- $\mathit{prune}(L,t)$      (remudando las valores $> t$)
-		- $L \leftarrow \mathit{recortar}(L,\epsilon/2n)$
-	      - return $\max(L)$
+	   - $L \leftarrow \{\emptyset\}$
+	   - for $i\leftarrow 1$ to $n$
+	     - $L \leftarrow \mathit{merge} (L,L+x_i)$
+	     - $\mathit{prune}(L,t)$      (remudando las valores $> t$)
+	     - $L \leftarrow \mathit{recortar}(L,\epsilon/2n)$
+	   - return $\max(L)$
+
+	   - How to choose $\delta$?
+             - $\delta$ must be proportional to $\epsilon$ (smaller
+               value of $\epsilon$ means tighter approximation of $L$)
+             - $\delta$ must be inversely proportional to $n$:
+	       - any error in the recorting will be exponentially
+                 amplified by the repetition of the process.
+	     - $\delta=\epsilon/2n$
 
 	 + Analysis
 
-	    - El resultado es una $(1+\epsilon)$-aproximacion:
-	      1. retorne una solucion valida, tal que 
-		 - $\sum(S')\leq t$ para algun $S'\subset S$
-	      2. en el paso $i$, para todo $z\in L_{OPT}$,
-		 existe un $y\in L_A$ tal que $z$ representa a $y$.
-		 - Luego de los $n$ pasos, el $z^*$ optimo en $L_{OPT}$
-		   tiene un representante $y^*\in L_A$ tal que 
-		   $$z^*/(1+\epsilon/2n)^n \leq y^* \leq z^*$$
-	      3. Para mostrar que el algoritmo es una $(1+\epsilon)$
-		 aproximacion, 
-		 - hay que mostrar que
-		   - $z^*/(1+\epsilon) \leq y^*$
-		 - entonces, debemos mostrar que 
-		   - $(1+\epsilon/2n)^n \leq 1+\epsilon$
-		 - Eso se muestra con puro calculo:
-		   - $(1+\epsilon/2n)^n \leq? 1+\epsilon$
-		   - $e^{n\lg(1+\epsilon/2n) }$
-		   - $\leq e^{ n \epsilon /2n }$
-		   - $= e^{ \epsilon/2 }$
-		   - $\leq? e^{\ln(1+\epsilon)}$
-		   - eso es equivalente a elegir \epsilon tal
-		     que $\epsilon/2 \leq \ln(1+\epsilon)$
-		   - i.e. cualquier tal que $0<\epsilon\leq 1$
-	      4. El algoritmo es polinomial (en todos los parametros)
-		 - despues de recortar dedos $y_i,y_{i+1}\in L$
-		   se cumple $y_{i+1}>y_i(1+\delta)$
-		   y el ultimo elemento es $\leq t$
-		 - entonces, la lista contiene $0,1$
-		   y luego a lo mas $\lfloor \log_{(1+\delta)} t \rfloor$
-		 - entonces el largo de L en cada iteracion no supera
-		   $2+ \frac{ \log t }{ \log( 1+\varepsilon/2n) }$
-		 - Nota que $\ln(1+x)$
-		   - $= - \ln (1/(1+x))$
-		   - $= - \ln ( (1+x-x)/(1+x) )$
-		   - $= - \ln ( 1 - x/(1+x) )$
-		   - $= - \ln (1+y) \geq -y$
-		   - $\geq - (-x/(1+x)) = x/(1+x)$
-		 - Entonces
-		   - $2+ \frac{ \ln t }{ \ln 1 + \epsilon/2n }$
-		   - $\leq 2 + ((1+\epsilon/2n) 2n \ln t )/\epsilon$
-		   - $= ( 2n\ln t )/ \epsilon + \ln t + 2$
-		   - $= O(n \lg t /\epsilon)$
-		 - Entonces cada iteracion toma $O(n \lg t /\epsilon)$ operaciones
-		 - Las $n$ iteraciones en total toman 
-		   - $O(n^2 \lg t /\epsilon)$ operaciones
+	   - El resultado es una $(1+\epsilon)$-aproximacion:
+	     1. retorne una solucion valida, tal que 
+		- $\sum(S')\leq t$ para algun $S'\subset S$
+	     2. en el paso $i$, para todo $z\in L_{OPT}$,
+		existe un $y\in L_A$ tal que $z$ representa a $y$.
+		- Luego de los $n$ pasos, el $z^*$ optimo en $L_{OPT}$
+		  tiene un representante $y^*\in L_A$ tal que 
+		  $$z^*/(1+\epsilon/2n)^n \leq y^* \leq z^*$$
+	     3. Para mostrar que el algoritmo es una $(1+\epsilon)$
+		aproximacion, 
+		- hay que mostrar que
+		  - $z^*/(1+\epsilon) \leq y^*$
+		- entonces, debemos mostrar que 
+		  - $(1+\epsilon/2n)^n \leq 1+\epsilon$
+		- Eso se muestra con puro calculo:
+		  - $(1+\epsilon/2n)^n \leq? 1+\epsilon$
+		  - $e^{n\lg(1+\epsilon/2n) }$
+		  - $\leq e^{ n \epsilon /2n }$ para $\epsilon$ sufficiently small
+		  - $= e^{ \epsilon/2 }$
+		  - $\leq? e^{\ln(1+\epsilon)}$
+		  - eso es equivalente a elegir \epsilon tal
+		    que $\epsilon/2 \leq \ln(1+\epsilon)$
+		  - i.e. cualquier tal que $0<\epsilon\leq 1$
+	     4. El algoritmo es polinomial (en todos los parametros)
+		- despues de recortar dedos $y_i,y_{i+1}\in L$
+		  se cumple $y_{i+1}>y_i(1+\delta)$
+		  y el ultimo elemento es $\leq t$
+		- entonces, la lista contiene $0,1$
+		  y luego a lo mas $\lfloor \log_{(1+\delta)} t \rfloor$
+		- entonces el largo de L en cada iteracion no supera
+		  $2+ \frac{ \log t }{ \log( 1+\varepsilon/2n) }$
+		- Nota que $\ln(1+x)$
+		  - $= - \ln (1/(1+x))$
+		  - $= - \ln ( (1+x-x)/(1+x) )$
+		  - $= - \ln ( 1 - x/(1+x) )$
+		  - $= - \ln (1+y) \geq -y$
+		  - $\geq - (-x/(1+x)) = x/(1+x)$
+		- Entonces
+		  - $2+ \frac{ \ln t }{ \ln 1 + \epsilon/2n }$
+		  - $\leq 2 + ((1+\epsilon/2n) 2n \ln t )/\epsilon$
+		  - $= ( 2n\ln t )/ \epsilon + \ln t + 2$
+		  - $= O(n \lg t /\epsilon)$
+		- Entonces cada iteracion toma $O(n \lg t /\epsilon)$ operaciones
+		- Las $n$ iteraciones en total toman 
+		  - $O(n^2 \lg t /\epsilon)$ operaciones
 
 
 **** Conclusion/Wrap up Aproximabilidad
      :PROPERTIES:
      :Effort:   60
+     :Talks:    1
      :END:
 *** Algoritmos *paralelos* y distribuidos (2w = 4t = 360mns)
+    :PROPERTIES:
+    :Talks:    3
+    :END:
     - Medidas de complejidad
     - Tecnicas de diseno
 **** PREREQUISITOS
@@ -6743,6 +6807,59 @@ REFERENCIA:
 	  - prefijos
 
 
+* Examples
+** Example of Mathematical formulas seen with C-c C-x C-l 
+*** Basic formulas
+    $$\log_2 n$$
+    $$\frac{n}{\lg n}$$
+**** NEXT Find a command to put in latex header to make latex math larger
+*** Formulas in array (note the misalignments :( )
+    | $n$                   | $n^2$    | $\lfloor n/2 \rfloor$ |
+    | $\lfloor n/2 \rfloor$ | $n\lg n$ | $n$                   |
+** Example of time planification
+   :PROPERTIES:
+   :COLUMNS:  %80ITEM(TASK)  %5Effort(TIME){:} %5CLOCKSUM
+   :Effort_ALL: 30 45 60 90 2*90 3*90 4*90
+   :END:
+   Use C-c C-x C-c to switch to column mode, and "q" while in a column to quit.
+*** A unit
+**** a topic for 1/2 talk (45mn)
+     :PROPERTIES:
+     :Effort:   45
+     :END:
+**** a topic of 3 talks
+     :PROPERTIES:
+     :Effort:   3*90
+     :END: 
+
+** Example of Structure of Concept Question subsection 				 
+**** PREGUNTAS [0/0]						 :PREGUNTAS:
+***** 
+      :SOLUTION:     
+      :END:
+      :PROOF: 
+      :END:
+      :CONTEXT:
+      :END:
+      
+      1. [ ] 
+      2. [ ] 
+      3. [ ] 
+      4. [ ] 
+      5. [ ] otra respuesta
+***** Title of the question
+      :SOLUTION:     
+      :END:
+      :PROOF: 
+      :END:
+      Text of the question
+      1. [ ] Answer 1
+      2. [ ] Answer 2
+      3. [ ] Answer 3
+      4. [ ] Answer 4
+      5. [ ] none of the above
+
+
 	    
 	    
 	    
@@ -6751,3 +6868,5 @@ REFERENCIA:
 	    
 	    
 	    
+	     
+      

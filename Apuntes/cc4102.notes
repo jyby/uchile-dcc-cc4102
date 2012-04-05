@@ -887,7 +887,7 @@ persecución sufrida por Alan Turing.
 	     - $B^+$-Arbol
 	       - una lista enlazada conecta a todas las hojas del árbol: permite
 		 describir intervalos de soluciones.
-       2. Van Emde Boas arbol (vEB)
+       2. Van Emde Boas arbol (vEB) para "cache-oblivious" diccionario
 	  1) Historia:
 	     - Originalemente (1977) un estructura de datos normal, que
 	       suporta todas las operaciones en $O(\lg\lg n)$, inventada
@@ -954,22 +954,8 @@ persecución sufrida por Alan Turing.
 	 - min-max heaps
 	 - pairing heaps
 	 - skew heaps
-	 - /van Emde Boas queues/
-
-       - *van Emde Boas queues*
-	 - Definición: 
-
-	   "An efficient implementation of priority queues where
-	   insert, delete, get minimum, get maximum, etc. take O(log
-	   log N) time, where N is the total possible number of
-	   keys. Depending on the circumstance, the implementation
-	   is null (if the queue is empty), an integer (if the queue
-	   has one integer), a bit vector of size N (if N is small),
-	   or a special data structure: an array of priority queues,
-	   called the bottom queues, and one more priority queue of
-	   array indexes of the bottom queues."
-
-	   - rendimiento en memoria secundaria de "binary heap": Muy malo?
+	 - /van Emde Boas queues/ (no en comparacion model, le veamos despues)
+       - rendimiento en memoria secundaria de "binary heap": Muy malo?
 
     2) Colas de Prioridades en Memoria Secundaria: diseño  
        * El equivalente de B-Arbol
@@ -1324,6 +1310,269 @@ persecución sufrida por Alan Turing.
      :END:
 
      - afuera del modelo de comparacion. 
+**** Diccionarios
+***** van Emde Boas arboles en dominio discreto
+      1) Historia:
+	 - Pagina de Peter van Emde Boas: http://staff.science.uva.nl/~peter/
+	 - Originalemente (1977) una estructura de datos normal, que suporta todas las operaciones en $O(\lg\lg n)$, inventada por el equipo de Peter van Emde Boas (la que vamos a ver ahora).
+	 - No son considerados útiles en la práctica para "pequeños"
+	   árboles.
+	 - Aplicación (vista en previa seccion) a algoritmos "Cache-Oblivious" y estructuras de datos
+	   - Optimiza el cache sin conocer el tamaño $B$ de sus páginas
+	   - => Optimiza todos los niveles sin conocer $B_1,...,B_k$
+	 - Otras aplicaciones después en cálculo paralelo (?)
+      2) http://en.wikipedia.org/wiki/Van_Emde_Boas_tree
+***** Hashing
+      :PROPERTIES:
+      :Effort:   60:00
+      :Talks:    1
+      :END:
+****** Introduccion
+       :PROPERTIES:
+       :Effort:   10
+       :END:
+       * Motivaciones	 
+       - Mejor tiempo *en promedio*
+       - Uso de todos la herramientas que tenemos
+	 - dominio de las valores
+	 - distribuciones de probabilidades de las valores
+     * Terminologia 
+       - Tabla de Hash
+	 - Arreglo de tamaño $N$ 
+	 - que contiene $n$ elementos a dentro de un universo $[1..U]$
+       - Funccion de Hash $h(K)$
+	 - $h:[1..U] \rightarrow [0..N-1]$
+	 - se calcula rapidamente
+	 - distribue uniformemente (mas o menos) las llaves en la tabla
+	   en el caso ideal, $P[h(K)=i] = 1/N, \, \forall K,i$
+       - Collision 
+	 - cuando $h(K_{1})= h(K_{2})$
+
+****** Paradoxe del cumpleaños (Probabilidad de Colision)
+       :PROPERTIES:
+       :Effort:   10
+       :END:
+
+	 - la probabilidad de collision es alta: "Paradoxe del
+           cumpleaños"
+	   - ( http://www.wimp.com/justcoincidence/ )
+
+	 - Cual es la probabilidad que en una pieca de $n$ personas,
+	   dos tiene la misma fecha de cumpleaños (a dentro de $365$
+	   dias)?
+
+	   - probabilidad que cada cumpleaños es unico:
+	     $$ 364! \over {(365 - n)! \times 365^{n-1} }$$
+
+	   - Probabilidad que hay al menos un cumpleaños compartido:
+	     $$ 1 - 364! \over {(365 - n)! \times 365^{n-1} }$$
+
+	     |   n |    Proba |
+	     |-----+----------|
+	     |  10 |      .12 |
+	     |  23 |       .5 |
+	     |  50 |      .97 |
+	     | 100 | .9999996 |
+
+****** Hashing Abierto
+       :PROPERTIES:
+       :Effort:   10
+       :END:
+
+       1) Idea principal:
+	  - resolver las colisions con caldenas
+
+       2) Ejemplo:  (muy irealistico)
+	  - $h(K) = K \mathtt{ mod } 10$
+	  - Secuencia de insercion $52,18,70,22,44,38,62$
+	    - Insertando al final (si hay que probar por repeticiones)
+	      | 0 |       70 |
+	      | 1 |          |
+	      | 2 | 52,22,62 |
+	      | 3 |          |
+	      | 4 |       44 |
+	      | 5 |          |
+	      | 6 |          |
+	      | 7 |          |
+	      | 8 |    18,38 |
+	      | 9 |          |
+	    - Insertando al final (si no hay que probar por repeticiones)
+	      | 0 |       70 |
+	      | 1 |          |
+	      | 2 | 62,22,52 |
+	      | 3 |          |
+	      | 4 |       44 |
+	      | 5 |          |
+	      | 6 |          |
+	      | 7 |          |
+	      | 8 |    38,18 |
+	      | 9 |          |
+	      
+       3) Analisis:
+
+	  - factor de carga es $\lambda= {n \over N}$
+	  - Rendimiento en el peor caso: $O(n)$
+
+****** Hashing Cerrado
+       :PROPERTIES:
+       :Effort:   10
+       :END:
+       
+       1) Idea principal:
+	  - resolver las colisiones con busqueda, i.e. 
+	    - $( h(K)+f(i) ) \mathtt{ mod } N$
+	  - differentes tipos de busqueda:
+	    - *lineal*  $f(i) = i$
+	      - primary "clustering" (formacion de secuencias largas)		
+	    - *cuadratica* $f(i) = i^2$
+	      - secundario "clustering" (si $h(K_1)=h(K_2)$, la
+	       	secuencias son las mismas.
+	    - *doble hashing* $f(i) = i . h'(K)$
+	      - $h'(K)$ debe ser prima con N
+
+****** Ideal Hashing
+
+	 - Imagina una funcion de hash que genera una secuencia que
+	   parece aleatoria.
+
+	 - cada posicion tiene la misma probabilidad de ser la
+	   proxima
+	    - Probabilidad $\lambda$ de elegir una posicion ocupada
+	    - Probabilidad $1-\lambda$ de elegir une posicion libre
+	    - la secuencia de prueba puede tocar la misma posicion
+	      mas que una vez.
+	    - llaves identicas todavia siguen la misma secuencia.
+
+	 - Cual es el costo promedio $u_j$ de una busqueda negativa
+	   con $j$ llaves en la tabla?
+
+	   - $\lambda= \frac{j}{N}$
+
+	   - $u_j = 1 (1-\lambda) + 2\lambda(1-\lambda)+r\lambda^2(1-\lambda)+\ldots$
+
+	   - $= 1 + \lambda + \lambda^2 + \ldots$
+
+	   - $= \frac{1}{1-\lambda}$
+
+	   - $= \frac{1}{1-j/N}$
+
+	   - $= \frac{N}{N-j} \in[1..N]$
+
+	 - Cual es el costo promedio de una busqueda positiva $s_i$
+	   para el $i$-th elemento insertado?
+	   
+	   - $s_i = \frac{1}{1- i/N} = \frac{N}{N-i}$
+
+	   - $s_n = 1/n \sum \frac{N}{N-i}$
+
+	   - $= \frac{N}{n} \sum_{i=0}^{n-1} \frac{1}{N-i}$
+
+	   - $= \frac{1}{\alpha} \sum_{i=0}^{n-1} \frac{1}{N-i}$
+	     con $\alpha = \frac{n}{N}$
+
+	   - $< \frac{1}{\alpha} \int_{N-n}^{N} 1/x dx$
+
+	   - $= 1/\alpha \ln\frac{N}{N-n}$
+
+	   - $= 1/\alpha \ln\frac{1}{\alpha}$
+
+	 - Para $\alpha = 1/2$, el costo promedio es $1.387$
+
+	 - Para $\alpha = 0.9$, el costo promedio es $2.559$
+
+****** Universal Hashing
+       :PROPERTIES:
+       :Effort:   20
+       :END:
+
+       - $h(K) = ( (aK+b) \mathtt{ mod } p) \mathtt{ mod } N$
+       - $a \in [1..p-1]$ elegido al azar
+       - $b \in [0..p-1]$ elegido al azar
+       - $p$ es primo y mas grande que $N$ 
+       - $N$ no es necesaramente primo
+
+***** Hashing en memoria externa
+      :PROPERTIES:
+      :Effort:   30
+      :Talks:  
+      :END:
+
+  1) Que pasa si la tabla de hashing no queda en memoria?
+
+     - IDEA: Simula un B-arbol de altura dos
+       - organiza el dato con valores de hash
+       - guarda un index en el nodo raiz
+       - usa solamente *una parte* de la valor de hash para elegir
+	 el sobre-arbol
+       - extiende el index cuando mas dato es agregado
+
+  2) Ideas de soluciones
+
+     - usar tecnicas similares a $B$-arboles, vEB arboles.
+
+  3) Descripcion
+     
+     - $B$ - cantidad de elementos en una pagina
+     - $h$ - funcion de hash $\rightarrow [0..2^k-1]$
+     - $D$ - *profundidad general*, con $D\leq k$
+       - la raiz tiene $2^D$ punteros a las paginas horas
+       - la raiz es indexada con los $D$ primeros bits de cada
+	 valor de hash.
+     - $d_l$ - *profundidad local* de cada hora $l$
+       - Las valores de hash en $l$ tienen en comun los primeros
+	 $d_l$ bits.
+       - Hay $2^{D-d_l}$ punteros a la hora $l$
+       - Siempre, $d_l\leq D$
+
+  4) Ejemplo
+
+     - $B=4, k=6, D=2$
+
+       | $d_l=2$ | 000100 |
+       |         | 001000 |
+       |         | 001011 |
+       |         | 001100 |
+
+       | $d_l=2$ | 010101 |
+       |         | 011100 |
+       |         |        |
+       |         |        |
+
+       | $d_l=1$ | 100100 |
+       |         | 101101 |
+       |         | 110001 |
+       |         | 111100 |
+
+  5) Algoritmos
+
+     - Buscar
+     - Insertar
+     - Remover
+
+  6) Analisis
+
+     - Buscar, insertar remover
+       - 1 acceso a la memoria secundariaa si el index se queda
+     - cantidad Promedio de paginas para tener $n$ llaves
+       - $\frac{n}{B\lg 2}\approx 1.44 \frac{n}{B}$
+       - paginas son llenas a $69\%$ mas o menos.
+
+
+**** Colas de Prioridades
+***** van EmdeBoas
+       - *van Emde Boas queues*  
+	 - Definición: 
+	   "An efficient implementation of priority queues where
+	   insert, delete, get minimum, get maximum, etc. take O(log
+	   log N) time, where N is the total possible number of
+	   keys. Depending on the circumstance, the implementation
+	   is null (if the queue is empty), an integer (if the queue
+	   has one integer), a bit vector of size N (if N is small),
+	   or a special data structure: an array of priority queues,
+	   called the bottom queues, and one more priority queue of
+	   array indexes of the bottom queues."
+	 - http://xlinux.nist.gov/dads/HTML/vanemdeboas.html
+
 **** Algoritmos de Ordenamiento (Counting Sort, Bucket sort, radix sort, string sort)
      :PROPERTIES:
      :Effort:   70:00
@@ -1604,242 +1853,6 @@ persecución sufrida por Alan Turing.
 
 	 - un diccionario con todos los bit vectores de tamaño
 	   $$\sqrt{n} \lg n /2 \lg\lg n  \in o(n)$$
-**** Hashing
-     :PROPERTIES:
-     :Effort:   60:00
-     :Talks:    1
-     :END:
-***** Introduccion
-      :PROPERTIES:
-      :Effort:   10
-      :END:
-      * Motivaciones	 
-      - Mejor tiempo *en promedio*
-      - Uso de todos la herramientas que tenemos
-	- dominio de las valores
-	- distribuciones de probabilidades de las valores
-    * Terminologia 
-      - Tabla de Hash
-	- Arreglo de tamaño $N$ 
-	- que contiene $n$ elementos a dentro de un universo $[1..U]$
-      - Funccion de Hash $h(K)$
-	- $h:[1..U] \rightarrow [0..N-1]$
-	- se calcula rapidamente
-	- distribue uniformemente (mas o menos) las llaves en la tabla
-	  en el caso ideal, $P[h(K)=i] = 1/N, \, \forall K,i$
-      - Collision 
-	- cuando $h(K_{1})= h(K_{2})$
-
-***** Paradoxe del cumpleaños (Probabilidad de Colision)
-      :PROPERTIES:
-      :Effort:   10
-      :END:
-
-	- la probabilidad de collision es alta: "Paradoxe del
-          cumpleaños"
-	  - ( http://www.wimp.com/justcoincidence/ )
-
-	- Cual es la probabilidad que en una pieca de $n$ personas,
-	  dos tiene la misma fecha de cumpleaños (a dentro de $365$
-	  dias)?
-
-	  - probabilidad que cada cumpleaños es unico:
-	    $$ 364! \over {(365 - n)! \times 365^{n-1} }$$
-
-	  - Probabilidad que hay al menos un cumpleaños compartido:
-	    $$ 1 - 364! \over {(365 - n)! \times 365^{n-1} }$$
-
-	    |   n |    Proba |
-	    |-----+----------|
-	    |  10 |      .12 |
-	    |  23 |       .5 |
-	    |  50 |      .97 |
-	    | 100 | .9999996 |
-
-***** Hashing Abierto
-      :PROPERTIES:
-      :Effort:   10
-      :END:
-
-      1) Idea principal:
-	 - resolver las colisions con caldenas
-
-      2) Ejemplo:  (muy irealistico)
-	 - $h(K) = K \mathtt{ mod } 10$
-	 - Secuencia de insercion $52,18,70,22,44,38,62$
-	   - Insertando al final (si hay que probar por repeticiones)
-	     | 0 |       70 |
-	     | 1 |          |
-	     | 2 | 52,22,62 |
-	     | 3 |          |
-	     | 4 |       44 |
-	     | 5 |          |
-	     | 6 |          |
-	     | 7 |          |
-	     | 8 |    18,38 |
-	     | 9 |          |
-	   - Insertando al final (si no hay que probar por repeticiones)
-	     | 0 |       70 |
-	     | 1 |          |
-	     | 2 | 62,22,52 |
-	     | 3 |          |
-	     | 4 |       44 |
-	     | 5 |          |
-	     | 6 |          |
-	     | 7 |          |
-	     | 8 |    38,18 |
-	     | 9 |          |
-	     
-      3) Analisis:
-
-	 - factor de carga es $\lambda= {n \over N}$
-	 - Rendimiento en el peor caso: $O(n)$
-
-***** Hashing Cerrado
-      :PROPERTIES:
-      :Effort:   10
-      :END:
-      
-      1) Idea principal:
-	 - resolver las colisiones con busqueda, i.e. 
-	   - $( h(K)+f(i) ) \mathtt{ mod } N$
-	 - differentes tipos de busqueda:
-	   - *lineal*  $f(i) = i$
-	     - primary "clustering" (formacion de secuencias largas)		
-	   - *cuadratica* $f(i) = i^2$
-	     - secundario "clustering" (si $h(K_1)=h(K_2)$, la
-	       secuencias son las mismas.
-	   - *doble hashing* $f(i) = i . h'(K)$
-	     - $h'(K)$ debe ser prima con N
-
-***** Ideal Hashing
-
-	- Imagina una funcion de hash que genera una secuencia que
-	  parece aleatoria.
-
-	- cada posicion tiene la misma probabilidad de ser la
-	  proxima
-	   - Probabilidad $\lambda$ de elegir una posicion ocupada
-	   - Probabilidad $1-\lambda$ de elegir une posicion libre
-	   - la secuencia de prueba puede tocar la misma posicion
-	     mas que una vez.
-	   - llaves identicas todavia siguen la misma secuencia.
-
-	- Cual es el costo promedio $u_j$ de una busqueda negativa
-	  con $j$ llaves en la tabla?
-
-	  - $\lambda= \frac{j}{N}$
-
-	  - $u_j = 1 (1-\lambda) + 2\lambda(1-\lambda)+r\lambda^2(1-\lambda)+\ldots$
-
-	  - $= 1 + \lambda + \lambda^2 + \ldots$
-
-	  - $= \frac{1}{1-\lambda}$
-
-	  - $= \frac{1}{1-j/N}$
-
-	  - $= \frac{N}{N-j} \in[1..N]$
-
-	- Cual es el costo promedio de una busqueda positiva $s_i$
-	  para el $i$-th elemento insertado?
-	  
-	  - $s_i = \frac{1}{1- i/N} = \frac{N}{N-i}$
-
-	  - $s_n = 1/n \sum \frac{N}{N-i}$
-
-	  - $= \frac{N}{n} \sum_{i=0}^{n-1} \frac{1}{N-i}$
-
-	  - $= \frac{1}{\alpha} \sum_{i=0}^{n-1} \frac{1}{N-i}$
-	    con $\alpha = \frac{n}{N}$
-
-	  - $< \frac{1}{\alpha} \int_{N-n}^{N} 1/x dx$
-
-	  - $= 1/\alpha \ln\frac{N}{N-n}$
-
-	  - $= 1/\alpha \ln\frac{1}{\alpha}$
-
-	- Para $\alpha = 1/2$, el costo promedio es $1.387$
-
-	- Para $\alpha = 0.9$, el costo promedio es $2.559$
-
-***** Universal Hashing
-      :PROPERTIES:
-      :Effort:   20
-      :END:
-
-      - $h(K) = ( (aK+b) \mathtt{ mod } p) \mathtt{ mod } N$
-      - $a \in [1..p-1]$ elegido al azar
-      - $b \in [0..p-1]$ elegido al azar
-      - $p$ es primo y mas grande que $N$ 
-      - $N$ no es necesaramente primo
-
-**** Hashing en memoria externa
-     :PROPERTIES:
-     :Effort:   30
-     :Talks:  
-     :END:
-
- 1) Que pasa si la tabla de hashing no queda en memoria?
-
-    - IDEA: Simula un B-arbol de altura dos
-      - organiza el dato con valores de hash
-      - guarda un index en el nodo raiz
-      - usa solamente *una parte* de la valor de hash para elegir
-	el sobre-arbol
-      - extiende el index cuando mas dato es agregado
-
- 2) Ideas de soluciones
-
-    - usar tecnicas similares a $B$-arboles, vEB arboles.
-
- 3) Descripcion
-    
-    - $B$ - cantidad de elementos en una pagina
-    - $h$ - funcion de hash $\rightarrow [0..2^k-1]$
-    - $D$ - *profundidad general*, con $D\leq k$
-      - la raiz tiene $2^D$ punteros a las paginas horas
-      - la raiz es indexada con los $D$ primeros bits de cada
-	valor de hash.
-    - $d_l$ - *profundidad local* de cada hora $l$
-      - Las valores de hash en $l$ tienen en comun los primeros
-	$d_l$ bits.
-      - Hay $2^{D-d_l}$ punteros a la hora $l$
-      - Siempre, $d_l\leq D$
-
- 4) Ejemplo
-
-    - $B=4, k=6, D=2$
-
-      | $d_l=2$ | 000100 |
-      |         | 001000 |
-      |         | 001011 |
-      |         | 001100 |
-
-      | $d_l=2$ | 010101 |
-      |         | 011100 |
-      |         |        |
-      |         |        |
-
-      | $d_l=1$ | 100100 |
-      |         | 101101 |
-      |         | 110001 |
-      |         | 111100 |
-
- 5) Algoritmos
-
-    - Buscar
-    - Insertar
-    - Remover
-
- 6) Analisis
-
-    - Buscar, insertar remover
-      - 1 acceso a la memoria secundariaa si el index se queda
-    - cantidad Promedio de paginas para tener $n$ llaves
-      - $\frac{n}{B\lg 2}\approx 1.44 \frac{n}{B}$
-      - paginas son llenas a $69\%$ mas o menos.
-
-
 *** Tecnicas de Analisis
 **** Introduccion
      :PROPERTIES:

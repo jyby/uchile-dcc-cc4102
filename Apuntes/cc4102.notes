@@ -1011,17 +1011,23 @@ persecución sufrida por Alan Turing.
 	  - muy importante para applicaciones de computacion con mucho
 	    datos.
 
-       2) Nuevas notaciones
+       2) Prerequisitos
 
-	  - $B$ = Tamano pagina
-	  - $N$ = cantidad de elementos en total
-	  - $n$ = cantidad de paginas con elementos = $N/B$
-	  - $M$ = cantidad de memoria local
-	  - $m$ = cantidad de paginas locales = $M/B$
-	  - mnemotechnique: 
-	    - $N,M,B$ en cantidad de "palabras maquinas" (=bytes?)
-	    - $n,m$ en cantidad de paginas
-	    - $n<<N$, $m<<M$, por eso son "pequeñas" letras
+	  * Notaciones
+	    - $B$ = Tamano pagina
+	    - $N$ = cantidad de elementos en total
+	    - $n$ = cantidad de paginas con elementos = $N/B$
+	    - $M$ = cantidad de memoria local
+	    - $m$ = cantidad de paginas locales = $M/B$
+	    - mnemotechnique: 
+	      - $N,M,B$ en cantidad de "palabras maquinas" (=bytes?)
+	      - $n,m$ en cantidad de paginas
+	      - $n<<N$, $m<<M$, por eso son "pequeñas" letras
+
+	  * Formulas utiles:
+	    - $\log(x!) \approx x\log x$
+	    - $\log {M \choose B} \approx B \lg \frac{M}{B}$
+
 
        3) En estas notaciones, usando resultos previos:
 
@@ -1067,44 +1073,44 @@ persecución sufrida por Alan Turing.
 	   * que se puede notar mas simplamente $\Omega( n\lg_m n )$
 	 - Prueba:
 
-	   * en vez de considerar el problema de ordenamiento,
-	     supponga que el arreglo sea una permutacion y
-	     considera el problema (equivalente en ese caso) de
-	     identificar cual permutacion sea.
+	   1. en vez de considerar el problema de ordenamiento,
+	      supponga que el arreglo sea una permutacion y
+	      considera el problema (equivalente en ese caso) de
+	      identificar cual permutacion sea.
 
-	   * inicialemente, pueden ser $N!$ permutaciones.
-	     - supponga que cada bloque de $B$ elementos sea ya
-	       ordenado (impliqua un costo de al maximo $n=N/B$
-	       accessos a la memoria externa).
-	     - queda $N! / ( (B!)^n )$ permutaciones posibles.
+	   2. inicialemente, pueden ser $N!$ permutaciones.
+	      - supponga que cada bloque de $B$ elementos sea ya
+		ordenado (impliqua un costo de al maximo $n=N/B$
+		accessos a la memoria externa).
+	      - queda $N! / ( (B!)^n )$ permutaciones posibles.
 
-	   * para cada accesso a una pagina de memoria externa,
-	     cuantos permutaciones potenciales podemos eliminar?
-	     - con $M$ entradas en memoria primaria
-	     - $B$ nuevas entradas se pueden quedar de 
-	       ${M \choose B}= \frac{M!}{B!(M-B)!}$ maneras distintas
-	     - calcular la union de los $M+B$ elementos reduce la
-	       cuantidad de permtuaciones por un factor de
-	       $1 / {M \choose B}$
-	     - después de $t$ accessos (distintos) a la memoria
-	       externa, se reduci la cuantidad de permutaciones a
-	       $N! / (  (B!)^n  {M \choose B}^t  )$
+	   3. para cada accesso a una pagina de memoria externa,
+	      cuantos permutaciones potenciales podemos eliminar?
+	      - con $M$ entradas en memoria primaria
+	      - $B$ nuevas entradas se pueden quedar de 
+		${M \choose B}= \frac{M!}{B!(M-B)!}$ maneras distintas
+	      - calcular la union de los $M+B$ elementos reduce la
+		cuantidad de permtuaciones por un factor de
+		$1 / {M \choose B}$
+	      - después de $t$ accessos (distintos) a la memoria
+		externa, se reduci la cuantidad de permutaciones a
+		$N! / (  (B!)^n  {M \choose B}^t  )$
 
-	   * cuanto accessos a la memoria sean necesarios para que
-	     queda al maximo una permutacion?
-	     - $N! / (  (B!)^n  {M \choose B}^t )$ debe ser al maximo uno.
-	     - usamos las formulas siguientes:
-	       - $\log(x!) \approx x\log x$
-	       - $\log {M \choose B} \approx B \lg \frac{M}{B}$
-	     - Inicialemente, tenemos la inequalidad siguiente:
-	       $$N! \leq (B!)^n {M \choose B}^t$$
-	     - aplicando el log de ambos lado (y las formulas previas) queda con 
-	       $$ N \lg N \leq n B \lg B + t B \lg \frac{M}{B}$$
-	     - Una secuencia de reduccion simples da:
-	       $$t \geq \frac { N\lg N - nB \lg B }{ B \lg(M/B) }$$
-	     - que se puede reescribir como $\frac { N \lg(N/B) }{ B \lg(M/B) }$        
-	     - Pero $n=N/B$ y $m=M/B$, asi se puede reescribir $\frac { n \lg n }{ \lg m }$
-	     - en final, deducimos $t \geq n \log_m n$.                                
+	   4. cuanto accessos a la memoria sean necesarios para que
+	      queda al maximo una permutacion?
+	      - $N! / (  (B!)^n  {M \choose B}^t )$ debe ser al maximo uno.
+	      - usamos las formulas siguientes:
+		- $\log(x!) \approx x\log x$
+		- $\log {M \choose B} \approx B \lg \frac{M}{B}$
+	      - Inicialemente, tenemos la inequalidad siguiente:
+		$$N! \leq (B!)^n {M \choose B}^t$$
+	      - aplicando el log de ambos lado (y las formulas previas) queda con 
+		$$ N \lg N \leq n B \lg B + t B \lg \frac{M}{B}$$
+	      - Una secuencia de reduccion simples da:
+		$$t \geq \frac { N\lg N - nB \lg B }{ B \lg(M/B) }$$
+	      - que se puede reescribir como $\frac { N \lg(N/B) }{ B \lg(M/B) }$        
+	      - Pero $n=N/B$ y $m=M/B$, asi se puede reescribir $\frac { n \lg n }{ \lg m }$
+	      - en final, deducimos $t \geq n \log_m n$.                                
 
        * BONUS: Para ordenar strings, un caso particular (donde la
 	 comparacion de dos elementos tiene un costo variable):
@@ -1578,6 +1584,18 @@ persecución sufrida por Alan Turing.
      :Effort:   70:00
      :Talks:    1
      :END:
+***** Provechando de las repeticiones en el modelo de Comparaciones
+      :PROPERTIES:
+      :Effort:   10
+      :END:
+      - =Insertion Sort= con repetitions:
+	- no inserta un elemento si ya esta
+	- diccionario nunca contiene mas de $\sigma$ elementos
+	- ordenamiento en $O(n\lg\sigma)$
+      - =Merge Sort= con repetitiones:
+	- re repite un elemento cuando haciendo el merge
+	- complejidad de $O(n\lg\sigma)$ de nuevo.
+
 ***** Counting Sort   $O(\sigma + n)$
       :PROPERTIES:
       :Effort:   10
@@ -1636,14 +1654,6 @@ persecución sufrida por Alan Turing.
      - En final, si $A$ es de tamaño $n$ sobre un alfabeto de
        tamaño $\sigma$, radix sort puede ordenar $A$ en tiempo
        $O( n \lceil \frac{\lg \sigma}{\lg n}\rceil )$
-
-***** MAYB Provechando de las repeticiones en el modelo de Comparaciones :MAYB:
-      :PROPERTIES:
-      :Effort:   10
-      :END:
-      - Se puede o no?
-
-  - Ordenar en $n H_i$ comparaciones
 
 ***** MAYB String Sort						       :MAYB:
 
